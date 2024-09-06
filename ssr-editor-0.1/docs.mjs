@@ -50,9 +50,10 @@ const docs = {
 
         try {
             return await db.run(
-                'INSERT INTO documents (title, content) VALUES (?, ?)',
+                'UPDATE documents SET title = ?, content = ? WHERE rowid = ?',
                 body.title,
                 body.content,
+                body.id
             );
         } catch (e) {
             console.error(e);
