@@ -44,6 +44,22 @@ const docs = {
             await db.close();
         }
     }
+
+    updateOne: async function addOne(body) {
+        let db = await openDb();
+
+        try {
+            return await db.run(
+                'INSERT INTO documents (title, content) VALUES (?, ?)',
+                body.title,
+                body.content,
+            );
+        } catch (e) {
+            console.error(e);
+        } finally {
+            await db.close();
+        }
+    }
 };
 
 export default docs;
