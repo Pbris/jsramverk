@@ -43,9 +43,9 @@ const docs = {
         } finally {
             await db.close();
         }
-    }
+    },
 
-    updateOne: async function addOne(body) {
+    updateOne: async function updateOne(body) {
         let db = await openDb();
 
         try {
