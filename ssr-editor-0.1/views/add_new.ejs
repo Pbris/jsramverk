@@ -1,0 +1,10 @@
+<%- include('includes/header'); %>
+    <h2>Dokument</h2>
+    <form method="POST" action="/add_new" class="new-doc">
+        <label for="title">Titel</label>
+            <input type="text" name="title" />
+            <label for="content">Innehåll</label>
+            <textarea name="content"></textarea>
+        <input type="submit" value="Lägg till" />
+    </form>
+<%- include('includes/footer'); %>

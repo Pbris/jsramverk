@@ -3,4 +3,8 @@
     <% docs.forEach(function(doc){ %>
         <h3><a href="/<%= doc.id %>"><%= doc.title %></a></h3>
     <% }); %>
+    <br>
+    <form action="add_new" class="new-doc">
+        <input type="submit" value="Lägg till nytt dokument" />
+    </form>
 <%- include('includes/footer'); %>
