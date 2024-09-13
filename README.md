@@ -11,3 +11,22 @@ För att få koden att fungera så gjorde vi tre saker:
 ### Val av frontend-ramverk
 
 Vårt val av frontend-ramverk föll på React, med TypeScript. Efter lite efterforskningar uppfattar vi detta som attraktivt i arbetslivet för de tjänster som vi har kollat upp, vilket är den främsta anledningen till vårt val.
+
+## Kmom02
+
+### Instruktioner för att installera MongoDB på Ubuntu 22.04 LTS
+```
+sudo apt-get install dirmngr
+sudo apt-get install gnupg curl
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc |    sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg    --dearmor
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+sudo systemctl start mongod
+mongosh // För att starta klienten i terminalen
+```
+**Note: man kan bli tvungen att ge behörighet genom följande kod**
+```
+sudo chown -R mongodb:mongodb /var/lib/mongodb
+sudo chmod 750 /var/lib/mongodb
+```
