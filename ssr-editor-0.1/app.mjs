@@ -54,6 +54,28 @@ app.get('/', async (req, res) => {
     return res.render("index", { docs: await documents.getAll() });
 });
 
+/* API */
+
+app.get("/api/", async (req, res) => {
+    const result = await documents.getAll();
+    return res.json(result);
+});
+
+app.get("/api/:id", async (req, res) => {
+    const result = await documents.getOne(req.params.id);
+    return res.json(result);
+});
+
+app.post("/api/add_new", async (req, res) => {
+    const result = await documents.addOne(req.body);
+    return res.json(result);
+});
+
+app.post("/api/update", async (req, res) => {
+    const result = await documents.updateOne(req.body);
+    return res.json(result);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 });
