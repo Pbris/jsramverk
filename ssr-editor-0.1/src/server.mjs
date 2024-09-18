@@ -36,14 +36,16 @@ app.get("/list", async (rreq, res) => {
 // Mount API routes under /api
 app.use('/api', apiRoutes);
 
+// Export the app for testing purposes
+export { app };
 
 // Startup server and liten on port
-app.listen(port, () => {
-    console.log(`Server is listening on ${port}`);
-    console.log(`DSN is: ${dsn}`);
-});
-
-
+if(process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`Server is listening on ${port}`);
+        console.log(`DSN is: ${dsn}`);
+    });
+}
 
 // /**
 //  * Find documents in an collection by matching search criteria.
