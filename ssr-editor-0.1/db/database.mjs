@@ -11,7 +11,6 @@ const database = {
         }
 
         const client  = await MongoClient.connect(dsn, {
-            useUnifiedTopology: true,
         });
         const db = await client.db();
         const collection = await db.collection(collectionName);
