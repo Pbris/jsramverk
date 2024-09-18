@@ -29,16 +29,6 @@ app.get("/", (req, res) => {
 app.get("/list", async (rreq, res) => {
     const result = await documents.getAll();
     return res.json(result);
-
-    try {
-        // let res = await findInCollection(dsn, "jsramverk", {}, {}, 0);
-        let res = await findInCollection({}, {}, 0);
-        console.log(res);
-        response.json(res);
-    } catch (err) {
-        console.log(err);
-        response.json(err);
-    }
 });
 
 /* API */
