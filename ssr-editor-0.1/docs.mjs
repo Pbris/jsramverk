@@ -1,4 +1,5 @@
 import database from './db/database.mjs';
+import { ObjectId } from 'mongodb';
 
 const docs = {
     getAll: async function getAll() {
@@ -19,7 +20,7 @@ const docs = {
 
         try {
             // Assuming `id` is a MongoDB ObjectId, you may need to import ObjectId from "mongodb"
-            return await collection.findOne({ _id: id });
+            return await collection.findOne({ _id: new ObjectId(id)});
         } catch (e) {
             console.error(e);
             return {};
