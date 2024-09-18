@@ -3,11 +3,13 @@
  */
 "use strict";
 
+import apiRoutes from '../routes/api.mjs'; 
+
 // // MongoDB
 // const database = require("../db/database.mjs");
 
 import documents from "./../docs.mjs";
-import express, { json } from 'express';
+import express from 'express';
 
 // const mongo = require("mongodb").MongoClient;
 const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
@@ -31,27 +33,8 @@ app.get("/list", async (rreq, res) => {
     return res.json(result);
 });
 
-/* API */
-
-app.get("/api/", async (req, res) => {
-    const result = await documents.getAll();
-    return res.json(result);
-});
-
-app.get("/api/:id", async (req, res) => {
-    const result = await documents.getOne(req.params.id);
-    return res.json(result);
-});
-
-app.post("/api/add_new", async (req, res) => {
-    const result = await documents.addOne(req.body);
-    return res.json(result);
-});
-
-app.post("/api/update", async (req, res) => {
-    const result = await documents.updateOne(req.body);
-    return res.json(result);
-});
+// Mount API routes under /api
+app.use('/api', apiRoutes);
 
 
 // Startup server and liten on port
