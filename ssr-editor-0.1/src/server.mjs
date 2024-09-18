@@ -7,7 +7,7 @@
 // const database = require("../db/database.mjs");
 
 import documents from "./../docs.mjs";
-import express from 'express';
+import express, { json } from 'express';
 
 // const mongo = require("mongodb").MongoClient;
 const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
@@ -16,7 +16,7 @@ const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
 const port = process.env.DBWEBB_PORT || 1337;
 const app = express();
 app.disable('x-powered-by');
-
+app.use(express.json());
 
 // Just for testing the sever
 app.get("/", (req, res) => {
