@@ -4,7 +4,7 @@
   "description": "Starter project for DV1677 JSRamverk",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --experimental-modules --timeout 5000 --exit"
+    "test": "NODE_ENV=test mocha --experimental-modules --timeout 5000 --exit"
   },
   "keywords": [],
   "author": "",
