@@ -1,64 +1,60 @@
-import openDb from './db/database.mjs';
+import database from './db/database.mjs';
 
 const docs = {
     getAll: async function getAll() {
-        let db = await openDb();
+        const { collection, client } = await database.getDb();
 
         try {
-            return await db.all('SELECT rowid as id, * FROM documents');
+            return await collection.find({}).toArray();
         } catch (e) {
             console.error(e);
-
             return [];
         } finally {
-            await db.close();
+            await client.close();
         }
     },
 
     getOne: async function getOne(id) {
-        let db = await openDb();
+        const { collection, client } = await database.getDb();
 
         try {
-            return await db.get('SELECT * FROM documents WHERE rowid=?', id);
+            // Assuming `id` is a MongoDB ObjectId, you may need to import ObjectId from "mongodb"
+            return await collection.findOne({ _id: id });
         } catch (e) {
             console.error(e);
-
             return {};
         } finally {
-            await db.close();
+            await client.close();
         }
     },
 
     addOne: async function addOne(body) {
-        let db = await openDb();
+        const { collection, client } = await database.getDb();
 
         try {
-            return await db.run(
-                'INSERT INTO documents (title, content) VALUES (?, ?)',
-                body.title,
-                body.content,
-            );
+            return await collection.insertOne({
+                title: body.title,
+                content: body.content,
+            });
         } catch (e) {
             console.error(e);
         } finally {
-            await db.close();
+            await client.close();
         }
     },
 
-    updateOne: async function updateOne(body) {
-        let db = await openDb();
+    updateOne: async function updateOne(id, body) {
+        const { collection, client } = await database.getDb();
 
         try {
-            return await db.run(
-                'UPDATE documents SET title = ?, content = ? WHERE rowid = ?',
-                body.title,
-                body.content,
-                body.id
+            return await collection.updateOne(
+                { _id: id },
+                { $set: { title: body.title, content: body.content } }
             );
         } catch (e) {
             console.error(e);
         } finally {
-            await db.close();
+            await client.close();
         }
     }
 };

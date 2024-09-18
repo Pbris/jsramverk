@@ -3,16 +3,19 @@
  */
 "use strict";
 
-// MongoDB
-const database = require("../db/database.js");
+// // MongoDB
+// const database = require("../db/database.mjs");
+
+import documents from "./../docs.mjs";
+import express from 'express';
+
 // const mongo = require("mongodb").MongoClient;
 const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
 
 // Express server
 const port = process.env.DBWEBB_PORT || 1337;
-const express = require("express");
 const app = express();
-
+app.disable('x-powered-by');
 
 
 // Just for testing the sever
@@ -23,7 +26,10 @@ app.get("/", (req, res) => {
 
 
 // Return a JSON object with list of all documents within the collection.
-app.get("/list", async (request, response) => {
+app.get("/list", async (rreq, res) => {
+    const result = await documents.getAll();
+    return res.json(result);
+
     try {
         // let res = await findInCollection(dsn, "jsramverk", {}, {}, 0);
         let res = await findInCollection({}, {}, 0);

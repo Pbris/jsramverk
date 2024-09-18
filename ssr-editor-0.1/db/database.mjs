@@ -1,4 +1,4 @@
-const mongo = require("mongodb").MongoClient;
+import { MongoClient } from "mongodb";
 // const config = require("./config.json");
 const collectionName = "jsramverk";
 
@@ -10,7 +10,7 @@ const database = {
             dsn = "mongodb://localhost:27017/test";
         }
 
-        const client  = await mongo.connect(dsn, {
+        const client  = await MongoClient.connect(dsn, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -24,4 +24,4 @@ const database = {
     }
 };
 
-module.exports = database;
+export default database;
