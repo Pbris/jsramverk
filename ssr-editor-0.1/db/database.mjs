@@ -11,7 +11,6 @@ const database = {
         }
 
         const client  = await MongoClient.connect(dsn, {
-            useNewUrlParser: true,
             useUnifiedTopology: true,
         });
         const db = await client.db();
