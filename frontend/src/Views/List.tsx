@@ -1,7 +1,7 @@
-import { log } from 'console';
-import React, { useEffect, useState } from 'react';
-
+import { useEffect, useState, useContext } from 'react';
+import SingleDocument from './SingleDocument';
 import { BACKEND_URL } from '../connSettings';
+
 
 // Define an interface for your item structure
 interface Item {
@@ -10,10 +10,13 @@ interface Item {
   // Add other properties as needed
 }
 
+
 function List() {
   // Explicitly type the state
   const [items, setItems] = useState<Item[]>([]);
-
+  const [singleView, setSingleView] = useState("List");
+  const [documentId, setDocumentId] = useState("");
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,14 +27,62 @@ function List() {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
+
   }, []);
 
+  // function returnView()
+  // {
+  //   if (singleView === "SingleDocument") {
+  //     return <SingleDocument id={documentId}/>
+  //   }
+  //   else if(singleView ==="List")
+  //   {
+  //     return <ul>
+  //       {
+  //       items.map(item => 
+  //       <li key={item._id}>
+  //       <button onClick={() =>
+  //       showSingleDocument(item._id)}>
+  //         {item.title}
+  //         </button>
+  //         </li>)  
+  //         }
+  //     </ul>
+  //   }
+  // }
+
+
+  function showSingleDocument(id: string)
+  {
+    setSingleView("SingleDocument");
+    setDocumentId(i => i=id);
+  }
+
+  // return (<>
+  //   {returnView}
+  //   </>
+  // );
+
+  if (singleView === "SingleDocument") {
+    return (
+        <SingleDocument id={documentId} />
+    );
+  }
+
   return (
-    <ul>
-      {items.map(item => <li key={item._id}>{item.title}</li>)}
-    </ul>
+    <div>
+      <h2>Document List</h2>
+      <ul>
+        {items.map(item => (
+          <li key={item._id}>
+            <button onClick={() => showSingleDocument(item._id)}>
+              {item.title}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

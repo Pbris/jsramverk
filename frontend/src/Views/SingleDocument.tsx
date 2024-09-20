@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import { BACKEND_URL } from '../connSettings';
-
+import PropTypes from 'prop-types';
 // Define an interface for your item structure
 interface Docs {
     _id: string;  // or number, depending on your data
@@ -10,14 +10,14 @@ interface Docs {
   }
 
 
-function SingleDocument() {
+function SingleDocument(props: { id: string }) {
     // const [doc, setDocs] = useState<Docs[]>([]);
     const [doc, setDocs] = useState({_id: 0, title:"", content:""});
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch(`${BACKEND_URL}/api/66e4061776c7528cfa0b4840`);
+          const response = await fetch(`${BACKEND_URL}/api/${props.id}`);
           
         //   const data: Docs[] = await response.json();
         const data = await response.json();

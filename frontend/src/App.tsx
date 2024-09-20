@@ -1,10 +1,12 @@
-import {useState, useEffect} from 'react';
+import {useState, createContext} from 'react';
 
-import List from './Views/List'
+import List from './Views/List';
 import SingleDocument from './Views/SingleDocument';
 import AddNew from './Views/AddNew';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+
+
 
 function App(): JSX.Element {
   const [view, setView] = useState("List");
@@ -15,7 +17,7 @@ function App(): JSX.Element {
       case "List":
         return <List />;
       case "SingleDocument":
-        return <SingleDocument />;
+        return <SingleDocument id="66ed4b8dcf223f1d8ec6e5df" />;
       case "AddNew":
         return <AddNew />;
       case "Home":
