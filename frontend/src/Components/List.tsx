@@ -1,6 +1,8 @@
 import { log } from 'console';
 import React, { useEffect, useState } from 'react';
 
+import { BACKEND_URL } from '../connSettings';
+
 // Define an interface for your item structure
 interface Item {
   _id: string;  // or number, depending on your data
@@ -15,9 +17,7 @@ function List() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:1337/api');
-        console.log(response);
-        
+        const response = await fetch(`${BACKEND_URL}/api`);
         const data: Item[] = await response.json();
         setItems(data);
       } catch (error) {

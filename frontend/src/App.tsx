@@ -4,7 +4,7 @@ import './App.css';
 
 import List from './Components/List'
 import SingleDocument from './Components/SingleDocument';
-
+import AddNew from './Components/AddNew';
 
 function App(): JSX.Element {
   const [view, setView] = useState("List");
@@ -16,8 +16,12 @@ function App(): JSX.Element {
         return <List />;
       case "SingleDocument":
         return <SingleDocument />;
+      case "AddNew":
+        return <AddNew />;
+      case "Home":
+          return <div>Hej och välkommen</div>;
       default:
-        return <div>Invalid view selected</div>;
+        return <div></div>;
     }
   }
 
@@ -27,9 +31,11 @@ function App(): JSX.Element {
 
   return (
     <>
-    <button onClick={() => changeView("List")}>List</button>
-    <button onClick={() => changeView("SingleDocument")}>SingleDocument</button>
-    {renderComponent()}
+      <button onClick={() => changeView("Home")}>Home</button>
+      <button onClick={() => changeView("List")}>List</button>
+      <button onClick={() => changeView("SingleDocument")}>SingleDocument</button>
+      <button onClick={() => changeView("AddNew")}>AddNew</button>
+      {renderComponent()}
     </>
   );
 }
