@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 // Define an interface for your item structure
 interface Item {
-  id: string;  // or number, depending on your data
+  _id: string;  // or number, depending on your data
   title: string;
   // Add other properties as needed
 }
@@ -15,7 +15,7 @@ function List() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:1337/api/list');
+        const response = await fetch('http://localhost:1337/api');
         console.log(response);
         
         const data: Item[] = await response.json();
@@ -30,7 +30,7 @@ function List() {
 
   return (
     <ul>
-      {items.map(item => <li key={item.id}>{item.title}</li>)}
+      {items.map(item => <li key={item._id}>{item.title}</li>)}
     </ul>
   );
 }
