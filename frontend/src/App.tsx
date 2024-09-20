@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react';
 
-import './App.css';
-
-import List from './Components/List'
-import SingleDocument from './Components/SingleDocument';
-import AddNew from './Components/AddNew';
+import List from './Views/List'
+import SingleDocument from './Views/SingleDocument';
+import AddNew from './Views/AddNew';
+import Header from './Components/Header';
+import Footer from './Components/Footer';
 
 function App(): JSX.Element {
   const [view, setView] = useState("List");
@@ -31,11 +31,13 @@ function App(): JSX.Element {
 
   return (
     <>
+      <Header/>
       <button onClick={() => changeView("Home")}>Home</button>
       <button onClick={() => changeView("List")}>List</button>
       <button onClick={() => changeView("SingleDocument")}>SingleDocument</button>
       <button onClick={() => changeView("AddNew")}>AddNew</button>
       {renderComponent()}
+      <Footer/>
     </>
   );
 }

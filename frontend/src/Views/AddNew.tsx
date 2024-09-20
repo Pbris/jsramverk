@@ -33,7 +33,6 @@ function AddNew() {
             setContent(c => c = contentText);
     }
 
-
     return (
         <>
         <h2>Dokument</h2>
@@ -42,7 +41,7 @@ function AddNew() {
                 <input type="text" name="title" id="title-text"/>
                 <label htmlFor="content">Innehåll</label>
                 <textarea name="content" id="content-text"></textarea>
-            <input type="submit" value="Lägg till" />
+            <input type="submit" value="Lägg till" disabled={submit}/>
         </form>
         </>
       );
