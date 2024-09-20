@@ -30,10 +30,10 @@ app.get("/", (req, res) => {
 
 
 // Return a JSON object with list of all documents within the collection.
-app.get("/list", async (rreq, res) => {
-    const result = await documents.getAll();
-    return res.json(result);
-});
+// app.get("/list", async (req, res) => {
+//     const result = await documents.getAll();
+//     return res.json(result);
+// });
 
 // Mount API routes under /api
 app.use('/api', apiRoutes);
