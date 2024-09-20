@@ -1,5 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
-import SingleDocument from './SingleDocument';
+import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../connSettings';
 
 
@@ -14,8 +13,6 @@ interface Item {
 function List(props: any) {
   // Explicitly type the state
   const [items, setItems] = useState<Item[]>([]);
-  const [singleView, setSingleView] = useState("List");
-  const [documentId, setDocumentId] = useState("");
   
   useEffect(() => {
     const fetchData = async () => {
@@ -31,52 +28,11 @@ function List(props: any) {
 
   }, []);
 
-  // function returnView()
-  // {
-  //   if (singleView === "SingleDocument") {
-  //     return <SingleDocument id={documentId}/>
-  //   }
-  //   else if(singleView ==="List")
-  //   {
-  //     return <ul>
-  //       {
-  //       items.map(item => 
-  //       <li key={item._id}>
-  //       <button onClick={() =>
-  //       showSingleDocument(item._id)}>
-  //         {item.title}
-  //         </button>
-  //         </li>)  
-  //         }
-  //     </ul>
-  //   }
-  // }
-
 
   function showSingleDocument(id: string)
   {
-    setSingleView("SingleDocument");
-    setDocumentId(i => i=id);
-  }
-
-  function showListView()
-  {
-    // setSingleView("List");
-    props.setView("List");
-  }
-
-  // return (<>
-  //   {returnView}
-  //   </>
-  // );
-
-  if (singleView === "SingleDocument") {
-    return (
-      <div>
-        <button onClick={showListView}>Back to List</button>
-        <SingleDocument id={documentId} />
-        </div>
-    );
+    props.setDocId(id);
+    props.setView("SingleDocument");
   }
 
   return (
