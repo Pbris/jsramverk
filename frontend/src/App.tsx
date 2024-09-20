@@ -1,7 +1,7 @@
 import {useState, createContext} from 'react';
 
 import List from './Views/List';
-import SingleDocument from './Views/SingleDocument';
+// import SingleDocument from './Views/SingleDocument';
 import AddNew from './Views/AddNew';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
@@ -15,9 +15,7 @@ function App(): JSX.Element {
   function renderComponent() {
     switch (view) {
       case "List":
-        return <List />;
-      case "SingleDocument":
-        return <SingleDocument id="66ed4b8dcf223f1d8ec6e5df" />;
+        return <List setView={setView}/>;
       case "AddNew":
         return <AddNew />;
       case "Home":
@@ -36,7 +34,6 @@ function App(): JSX.Element {
       <Header/>
       <button onClick={() => changeView("Home")}>Home</button>
       <button onClick={() => changeView("List")}>List</button>
-      <button onClick={() => changeView("SingleDocument")}>SingleDocument</button>
       <button onClick={() => changeView("AddNew")}>AddNew</button>
       {renderComponent()}
       <Footer/>

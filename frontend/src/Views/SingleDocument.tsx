@@ -31,14 +31,19 @@ function SingleDocument(props: { id: string }) {
     }, []);
 
     return (
-        <div className="single-doc">
-            <ul>
-            <li key={doc._id}>{doc._id}</li>
-            <li key={doc._id+`title`}>{doc.title}</li>
-            <li key={doc.content+`content`}>{doc.content}</li>
-            </ul>
-        </div>
 
+      <>
+      <h2>Dokument</h2>
+      <form className="new-doc">
+          <label htmlFor="title">Titel</label>
+              <input type="text" name="title" id="title-text" value={doc.title}
+              onChange={(e) => setDocs({ ...doc, title: e.target.value })}/>
+              <label htmlFor="content">Innehåll</label>
+              <textarea name="content" id="content-text" value={doc.content}
+              onChange={(e) => setDocs({ ...doc, content: e.target.value })}></textarea>
+          <input type="submit" value="Uppdatera"/>
+      </form>
+        </>
       );
 }
 

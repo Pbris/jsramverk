@@ -11,7 +11,7 @@ interface Item {
 }
 
 
-function List() {
+function List(props: any) {
   // Explicitly type the state
   const [items, setItems] = useState<Item[]>([]);
   const [singleView, setSingleView] = useState("List");
@@ -61,7 +61,8 @@ function List() {
 
   function showListView()
   {
-    setSingleView("List");
+    // setSingleView("List");
+    props.setView("List");
   }
 
   // return (<>
