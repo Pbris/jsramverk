@@ -10,6 +10,7 @@ import apiRoutes from '../routes/api.mjs';
 
 import documents from "./../docs.mjs";
 import express from 'express';
+import cors from 'cors';
 
 // const mongo = require("mongodb").MongoClient;
 const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
@@ -18,6 +19,7 @@ const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
 const port = process.env.DBWEBB_PORT || 1337;
 const app = express();
 app.disable('x-powered-by');
+app.use(cors());
 app.use(express.json());
 
 // Just for testing the sever
