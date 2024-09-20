@@ -45,3 +45,8 @@ npm test
 Att göra:
 - lägg till chai-http för att testa API:et
 - elaborera lite kring testerna
+
+### Instruktioner för att installera frontend, React med Typescript:
+npx create-react-app frontend --template typescript
+cd frontend/
+npm run build
