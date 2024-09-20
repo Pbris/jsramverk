@@ -59,6 +59,11 @@ function List() {
     setDocumentId(i => i=id);
   }
 
+  function showListView()
+  {
+    setSingleView("List");
+  }
+
   // return (<>
   //   {returnView}
   //   </>
@@ -66,7 +71,10 @@ function List() {
 
   if (singleView === "SingleDocument") {
     return (
+      <div>
+        <button onClick={showListView}>Back to List</button>
         <SingleDocument id={documentId} />
+        </div>
     );
   }
 
