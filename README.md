@@ -30,3 +30,18 @@ mongosh // För att starta klienten i terminalen
 sudo chown -R mongodb:mongodb /var/lib/mongodb
 sudo chmod 750 /var/lib/mongodb
 ```
+
+
+### Tester
+La till enkel testning.
+
+mocha och chai är tillagda i package.json som dev dependencies. För att köra testerna, kör:
+```
+cd ssr-editor-0.1
+nmp install // För att installera dev dependencies
+npm test
+```
+
+Att göra:
+- lägg till chai-http för att testa API:et
+- elaborera lite kring testerna
