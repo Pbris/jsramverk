@@ -49,8 +49,8 @@ const docs = {
 
         try {
             return await collection.updateOne(
-                { _id: id },
-                { $set: { title: body.title, content: body.content } }
+                { _id: new ObjectId(id) },
+                { $set: body }
             );
         } catch (e) {
             console.error(e);

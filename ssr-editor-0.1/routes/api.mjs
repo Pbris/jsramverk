@@ -19,7 +19,8 @@ router.post("/add_new", async (req, res) => {
 });
 
 router.post("/update", async (req, res) => {
-    const result = await documents.updateOne(req.body);
+    const { _id, ...updateData } = req.body;
+    const result = await documents.updateOne(_id, updateData);
     return res.json(result);
 });
 
