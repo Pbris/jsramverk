@@ -1,6 +1,24 @@
 # jsramverk
 Course repo DV1677 BTH
 ====================
+## Installera och köra
+För att installera och köra projektet, när det är nedladdat kör följande kommandon:
+
+Backend:
+```
+cd ssr-editor-0.1
+npm install
+nodemon run ssr-editor-0.1/src/server.mjs
+```
+
+Frontend:
+```
+cd frontend
+npm install
+nodemon start
+```
+
+
 ## Kmom01
 
 För att få koden att fungera så gjorde vi tre saker:
