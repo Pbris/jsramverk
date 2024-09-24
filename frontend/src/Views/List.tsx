@@ -42,7 +42,7 @@ function List(props: any) {
         {items.map(item => (
           <li key={item._id}>
             <button onClick={() => showSingleDocument(item._id)}>
-              {item.title}
+              {item.title || 'Untitled'}
             </button>
           </li>
         ))}
