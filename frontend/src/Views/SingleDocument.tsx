@@ -4,6 +4,7 @@ import { BACKEND_URL } from '../connSettings';
 function SingleDocument(props: { id: string }) {
   const [doc, setDocs] = useState({_id: 0, title:"", content:""});
   const [submit, setSubmit] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +31,12 @@ function SingleDocument(props: { id: string }) {
                 body: JSON.stringify(doc),
             });
             setSubmit(false);
+
+            setConfirmation(true);
+            setTimeout(() => {
+              setConfirmation(false);
+            }, 3000);
+
         }
     };
     updateDocument();
@@ -52,6 +59,11 @@ function SingleDocument(props: { id: string }) {
               onChange={(e) => setDocs({ ...doc, content: e.target.value })}></textarea>
           <input type="submit" value="Uppdatera" disabled={submit}/>
       </form>
+
+      {confirmation && (
+        <p style={{ color: 'green' }}>Dokumentet har uppdaterats!</p>
+      )}
+
         </>
       );
 }
