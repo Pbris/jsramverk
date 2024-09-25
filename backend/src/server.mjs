@@ -8,7 +8,7 @@ import apiRoutes from '../routes/api.mjs';
 // // MongoDB
 // const database = require("../db/database.mjs");
 
-import documents from "./../docs.mjs";
+import documents from "../docs.mjs";
 import express from 'express';
 import cors from 'cors';
 
