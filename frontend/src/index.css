@@ -81,3 +81,42 @@ footer {
     padding: 1.4rem 8rem;
     flex-shrink: 0;
 }
+
+ul.list-doc {
+    list-style-type: none;      /* Remove bullet points */
+    padding: 0;                 /* Remove default padding from ul */
+    margin: 0 0 1rem 0rem;                  /* Remove default margin */
+}
+
+ul.list-doc button {
+    background-color: lightgray; 
+    color: black;                
+    padding: 1rem;               
+    margin: 0.1rem;     
+    border-radius: 5px;          
+    cursor: pointer;             
+}
+
+ul.list-doc button:hover {
+    background-color: #e0e0e0;   /* Lighter background on hover */
+}
+
+.navbar {
+    background-color: lightblue;
+    padding: 0.5rem 1rem;       
+    display: flex;              
+    align-items: left;        
+}
+
+.navbar button {
+    background-color: white;    
+    border: none;               
+    padding: 0.5rem 1rem;
+    margin: 0.1rem;          
+    cursor: pointer;            
+    border-radius: 5px;         
+}
+
+.navbar button:hover {
+    background-color: #d3e0ff;  
+}

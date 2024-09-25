@@ -38,7 +38,7 @@ function List(props: any) {
   return (
     <div>
       <h2>Document List</h2>
-      <ul>
+      <ul className='list-doc'>
         {items.map(item => (
           <li key={item._id}>
             <button onClick={() => showSingleDocument(item._id)}>

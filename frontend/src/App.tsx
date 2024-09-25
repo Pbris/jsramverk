@@ -35,9 +35,11 @@ function App(): JSX.Element {
   return (
     <>
       <Header/>
+      <div className='navbar'>
       <button onClick={() => changeView("Home")}>Home</button>
       <button onClick={() => changeView("List")}>List</button>
       <button onClick={() => changeView("AddNew")}>AddNew</button>
+      </div>
       {renderComponent()}
       <Footer/>
     </>
