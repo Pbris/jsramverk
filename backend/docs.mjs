@@ -1,4 +1,4 @@
-import database from './db/database.mjs';
+import './db/database.mjs';
 import { ObjectId } from 'mongodb';
 
 const docs = {
