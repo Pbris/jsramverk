@@ -18,7 +18,9 @@ import cors from 'cors';
 let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk`;
 
 // Express server
-const port = process.env.DBWEBB_PORT || 1337;
+// const port = process.env.DBWEBB_PORT || 1337;
+const port = process.env.PORT || 1337;
+
 const app = express();
 app.disable('x-powered-by');
 app.use(cors());
