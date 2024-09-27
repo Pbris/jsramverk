@@ -1,6 +1,8 @@
 /**
  * Connect to the database and search using a criteria.
  */
+import dotenv from 'dotenv';
+dotenv.config();
 "use strict";
 
 import apiRoutes from '../routes/api.mjs'; 
@@ -8,15 +10,17 @@ import apiRoutes from '../routes/api.mjs';
 // // MongoDB
 // const database = require("../db/database.mjs");
 
-import documents from "./../docs.mjs";
+import documents from "../docs.mjs";
 import express from 'express';
 import cors from 'cors';
 
 // const mongo = require("mongodb").MongoClient;
-const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
+let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk`;
 
 // Express server
-const port = process.env.DBWEBB_PORT || 1337;
+// const port = process.env.DBWEBB_PORT || 1337;
+const port = process.env.PORT || 1337;
+
 const app = express();
 app.disable('x-powered-by');
 app.use(cors());

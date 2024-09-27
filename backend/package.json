@@ -4,7 +4,8 @@
   "description": "Starter project for DV1677 JSRamverk",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --experimental-modules --timeout 5000 --exit"
+    "test": "NODE_ENV=test mocha --experimental-modules --timeout 5000 --exit",
+    "start": "node src/server.mjs"
   },
   "keywords": [],
   "author": "",
@@ -15,9 +16,7 @@
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "mongodb": "^6.9.0",
-    "morgan": "^1.10.0",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "chai": "^5.1.1",
