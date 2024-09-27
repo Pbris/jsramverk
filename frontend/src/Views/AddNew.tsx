@@ -1,7 +1,13 @@
 import {useState, useEffect} from 'react';
 import { BACKEND_URL } from '../connSettings';
 
-function AddNew() {
+
+type AddNewProps = {
+    setView: React.Dispatch<React.SetStateAction<string>>;
+}
+
+
+function AddNew( {setView} : AddNewProps) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [submit, setSubmit] = useState(false);
@@ -16,13 +22,16 @@ function AddNew() {
                     },
                     body: JSON.stringify({ title, content }),
                 });
+
                 setSubmit(false);
+                setView("List")
             }
         }
         submitForm();
     },[submit, title, content])
 
-    function handleSubmit(){
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>){
+            event.preventDefault();
             setSubmit(true);
             let titleElement = document.getElementById("title-text") as HTMLInputElement | null
             const titleText = titleElement?.value ?? "";
@@ -36,7 +45,7 @@ function AddNew() {
     return (
         <>
         <h2>Dokument</h2>
-        <form onSubmit={handleSubmit} className="new-doc">
+        <form onSubmit={(e) => handleSubmit(e)} className="new-doc" method="POST">
             <label htmlFor="title">Titel</label>
                 <input type="text" name="title" id="title-text"/>
                 <label htmlFor="content">Innehåll</label>

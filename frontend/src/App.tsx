@@ -18,7 +18,7 @@ function App(): JSX.Element {
       case "List":
         return <List setView={setView} setDocId={setDocId}/>;
       case "AddNew":
-        return <AddNew />;
+        return <AddNew setView={setView}/>;
       case "Home":
           return <div>Hej och välkommen</div>;
       case "SingleDocument":
@@ -28,7 +28,7 @@ function App(): JSX.Element {
     }
   }
 
-  function changeView(newView: any) {
+  function changeView(newView: string) {
     setView(newView);
   }
 
