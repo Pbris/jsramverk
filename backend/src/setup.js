@@ -4,7 +4,10 @@
 "use strict";
 
 const mongo = require("mongodb").MongoClient;
-const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
+// const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
+
+const dsn = "mongodb+srv://admin:XOUdyhU6xIJ3cFsu@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk";
+
 
 const fs = require("fs");
 const path = require("path");

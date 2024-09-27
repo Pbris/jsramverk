@@ -1,7 +1,13 @@
+<<<<<<< Updated upstream
 import './db/database.mjs';
+=======
+// import './db/database.mjs';
+>>>>>>> Stashed changes
 import { ObjectId } from 'mongodb';
 
+import {database} from './db/database.mjs';
 const docs = {
+
     getAll: async function getAll() {
         const { collection, client } = await database.getDb();
 
@@ -17,7 +23,6 @@ const docs = {
 
     getOne: async function getOne(id) {
         const { collection, client } = await database.getDb();
-
         try {
             // Assuming `id` is a MongoDB ObjectId, you may need to import ObjectId from "mongodb"
             return await collection.findOne({ _id: new ObjectId(id)});
@@ -31,7 +36,6 @@ const docs = {
 
     addOne: async function addOne(body) {
         const { collection, client } = await database.getDb();
-
         try {
             return await collection.insertOne({
                 title: body.title,
@@ -46,7 +50,6 @@ const docs = {
 
     updateOne: async function updateOne(id, body) {
         const { collection, client } = await database.getDb();
-
         try {
             return await collection.updateOne(
                 { _id: new ObjectId(id) },
