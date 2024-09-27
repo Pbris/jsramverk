@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-import './db/database.mjs';
-=======
 // import './db/database.mjs';
->>>>>>> Stashed changes
 import { ObjectId } from 'mongodb';
 
 import {database} from './db/database.mjs';
