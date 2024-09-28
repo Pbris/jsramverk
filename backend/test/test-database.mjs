@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import database from '../db/database.mjs';
+import { database } from '../db/database.mjs';
 
 describe('Database Tests', function() {
     describe('getDb()', function() {
