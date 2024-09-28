@@ -24,6 +24,20 @@ describe('API Tests', function() {
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
+                    console.log(res.body.insertedId);
+                    done();
+                });
+        });
+    });
+
+    describe('GET /api/:id', function() {
+        // likely returning a false positive
+        it('should return a single document', function(done) {
+            chai.request.execute(app)
+                .get('/api/1') // change to the id of the document added / do a before hook
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res).to.be.json;
                     done();
                 });
         });
