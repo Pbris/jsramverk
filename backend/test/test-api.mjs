@@ -12,7 +12,7 @@ describe('API Tests', function() {
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
-                    done();  // Avsluta testet
+                    done(); 
                 });
         });
     });
