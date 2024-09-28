@@ -24,7 +24,14 @@ const collectionName = "jsramverk";
 
 // export default database;
 import { MongoClient, ServerApiVersion } from 'mongodb';
-const uri = "mongodb+srv://admin:XOUdyhU6xIJ3cFsu@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk";
+
+let uri = "mongodb+srv://admin:XOUdyhU6xIJ3cFsu@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk";
+
+if (process.env.NODE_ENV === 'test') {
+  // Consider switching to a cloud hosted database for testing
+  uri = "mongodb://localhost:27017/test";
+}
+
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
