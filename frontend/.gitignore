@@ -25,3 +25,4 @@ yarn-error.log*
 #deploy front end
 ./deploy.sh
 deploy.sh
+package-lock.json
