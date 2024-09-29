@@ -51,6 +51,8 @@ if(process.env.NODE_ENV !== 'test') {
         console.log(`Server is listening on ${port}`);
         console.log(`DSN is: ${dsn}`);
     });
+} else {
+    console.log("Server is not running, it is started in test mode");
 }
 
 // /**

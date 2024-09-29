@@ -14,7 +14,6 @@ router.get("/:id", async (req, res) => {
 
 router.post("/add_new", async (req, res) => {
     const result = await documents.addOne(req.body);
-    console.log(req)
     return res.json(result);
 });
 
