@@ -6,13 +6,21 @@ name: Node.js CI
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'backend/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'backend/**'
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
 
     strategy:
       matrix:
@@ -33,13 +41,9 @@ jobs:
         mongodb-version: ${{ matrix.mongodb-version }}
     - name: Install
     #  working-directory: ./backend
-      run: |
-        cd backend
-        npm install
+      run: npm ci
     # - run: npm ci
     # - run: npm run build --if-present
     - name : Test backend
     #  working-directory: ./backend
-      run: |
-        cd backend 
-        npm test
+      run: npm test
