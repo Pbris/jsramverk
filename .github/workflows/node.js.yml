@@ -43,8 +43,8 @@ jobs:
 
     - name: Run tests
       env:
-        ATLAS_USERNAME: ${{ secrets.CI_SECRETS.ATLAS_USERNAME }}
-        ATLAS_PASSWORD: ${{ secrets.CI_SECRETS.ATLAS_PASSWORD }}
-        ATLAS_TEST_USERNAME: ${{ secrets.CI_SECRETS.ATLAS_TEST_USERNAME }}
-        ATLAS_TEST_PASSWORD: ${{ secrets.CI_SECRETS.ATLAS_TEST_PASSWORD }}
+        ATLAS_USERNAME: ${{ secrets.ATLAS_USERNAME }}
+        ATLAS_PASSWORD: ${{ secrets.ATLAS_PASSWORD }}
+        ATLAS_TEST_USERNAME: ${{ secrets.ATLAS_TEST_USERNAME }}
+        ATLAS_TEST_PASSWORD: ${{ secrets.ATLAS_TEST_PASSWORD }}
       run: npm test
