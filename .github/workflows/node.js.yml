@@ -30,6 +30,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Print environment variables
+      run: echo "${{ env.ATLAS_TEST_USERNAME }}"
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       env:
