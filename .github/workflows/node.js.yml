@@ -18,8 +18,8 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      ATLAS_TEST_USERNAME: ${{ secrets.ATLAS_TEST_USERNAME }}
-      ATLAS_TEST_PASSWORD: ${{ secrets.ATLAS_TEST_PASSWORD }}
+      ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
+      ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
 
     defaults:
       run:
@@ -35,7 +35,7 @@ jobs:
       run: |
         echo ${{ env.ATLAS_TEST_USERNAME }}
         echo $ATLAS_TEST_USERNAME
-        echo ${{ secrets.ATLAS_TEST_USERNAME }}
+        echo ${{ vars.ATLAS_TEST_USERNAME }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       env:
