@@ -18,8 +18,8 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-    ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
-    ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
+      ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
+      ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
 
     defaults:
       run:
