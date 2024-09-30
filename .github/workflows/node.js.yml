@@ -17,13 +17,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+    ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
+    ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
 
     defaults:
       run:
         working-directory: ./backend
-      env:
-        ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
-        ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
 
     strategy:
       matrix:
@@ -33,7 +33,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Print environment variables
       run: |
-        echo "${{ env.ATLAS_TEST_USERNAME }}"
+        echo ${{ env.ATLAS_TEST_USERNAME }}
         echo $ATLAS_TEST_USERNAME
         echo ${{ vars.ATLAS_TEST_USERNAME }}
     - name: Use Node.js ${{ matrix.node-version }}
