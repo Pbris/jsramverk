@@ -25,14 +25,15 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
-        mongodb-version: ['4.2', '4.4', '5.0']
+        # mongodb-version: ['4.2', '4.4', '5.0']
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
     - name: Print environment variables
-      run: echo "${{ env.ATLAS_TEST_USERNAME }}"
-      run: echo $ATLAS_TEST_USERNAME
+      run: |
+        echo "${{ env.ATLAS_TEST_USERNAME }}"
+        echo $ATLAS_TEST_USERNAME
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       env:
@@ -44,10 +45,10 @@ jobs:
         cache-dependency-path: backend/package-lock.json
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name: Start MongoDB
-      uses: supercharge/mongodb-github-action@1.7.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
+    # - name: Start MongoDB
+    #   uses: supercharge/mongodb-github-action@1.7.0
+    #   with:
+    #     mongodb-version: ${{ matrix.mongodb-version }}
     - name: Install
     #  working-directory: ./backend
       run: npm ci
