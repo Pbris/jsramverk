@@ -1,14 +1,10 @@
-name: Backend CI
+name: Node.js CI
 
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
 
 jobs:
   build:
@@ -31,7 +27,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './backend/package-lock.json'
+        cache-dependency-path: '**/package-lock.json'
 
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.7.0
