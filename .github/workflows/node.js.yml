@@ -1,14 +1,25 @@
-name: Backend CI
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
 
 on:
   push:
     branches: [ "main" ]
+    # paths:
+    #   - 'backend/**'
   pull_request:
     branches: [ "main" ]
+    # paths:
+    #   - 'backend/**'
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+    env:
+      ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
+      ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
 
     defaults:
       run:
@@ -16,31 +27,27 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
-        mongodb-version: ['4.2', '4.4', '5.0']
+        node-version: [22.x]
 
     steps:
     - uses: actions/checkout@v4
-
+    - name: Print environment variables
+      run: |
+        echo ${{ env.ATLAS_TEST_USERNAME }}
+        echo $ATLAS_TEST_USERNAME
+        echo ${{ vars.ATLAS_TEST_USERNAME }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
+      env:
+        ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
+        ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
       with:
+        cache-dependency-path: backend/package-lock.json
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './backend/package-lock.json'
 
-    - name: Start MongoDB
-      uses: supercharge/mongodb-github-action@1.7.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
-
-    - name: Install dependencies
+    - name: Install
       run: npm ci
 
-    - name: Run tests
-      env:
-        ATLAS_USERNAME: ${{ secrets.CI_SECRETS.ATLAS_USERNAME }}
-        ATLAS_PASSWORD: ${{ secrets.CI_SECRETS.ATLAS_PASSWORD }}
-        ATLAS_TEST_USERNAME: ${{ secrets.CI_SECRETS.ATLAS_TEST_USERNAME }}
-        ATLAS_TEST_PASSWORD: ${{ secrets.CI_SECRETS.ATLAS_PASSWORD }}
+    - name : Test backend
       run: npm test
