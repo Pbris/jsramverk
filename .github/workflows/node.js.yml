@@ -54,5 +54,8 @@ jobs:
     # - run: npm ci
     # - run: npm run build --if-present
     - name : Test backend
+      env:
+        ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
+        ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
     #  working-directory: ./backend
       run: npm test
