@@ -38,10 +38,8 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       env:
-        ATLAS_USERNAME: ${{ secrets.ATLAS_USERNAME }}
-        ATLAS_PASSWORD: ${{ secrets.ATLAS_PASSWORD }}
-        ATLAS_TEST_USERNAME: ${{ secrets.ATLAS_TEST_USERNAME }}
-        ATLAS_TEST_PASSWORD: ${{ secrets.ATLAS_TEST_PASSWORD }}
+        ATLAS_TEST_USERNAME: ${{ vars.ATLAS_TEST_USERNAME }}
+        ATLAS_TEST_PASSWORD: ${{ vars.ATLAS_TEST_PASSWORD }}
       with:
         cache-dependency-path: backend/package-lock.json
         node-version: ${{ matrix.node-version }}
