@@ -34,6 +34,7 @@ jobs:
       run: |
         echo "${{ env.ATLAS_TEST_USERNAME }}"
         echo $ATLAS_TEST_USERNAME
+        echo ${{ vars.ATLAS_TEST_USERNAME }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       env:
