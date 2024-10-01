@@ -28,7 +28,7 @@ function AddNew( {setView} : AddNewProps) {
             }
         }
         submitForm();
-    },[submit, title, content])
+    },[submit, title, content, setView])
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>){
             event.preventDefault();
