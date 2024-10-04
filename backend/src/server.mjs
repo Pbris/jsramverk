@@ -2,13 +2,19 @@
  * Connect to the database and search using a criteria.
  */
 import dotenv from 'dotenv';
+import http from 'http';
+import apiRoutes from '../routes/api.mjs'; 
 dotenv.config();
 "use strict";
+import { Server } from 'socket.io';
 
-import apiRoutes from '../routes/api.mjs'; 
+
 
 // // MongoDB
 // const database = require("../db/database.mjs");
+
+
+
 
 import documents from "../docs.mjs";
 import express from 'express';
@@ -25,6 +31,29 @@ const app = express();
 app.disable('x-powered-by');
 app.use(cors());
 app.use(express.json());
+const httpServer = http.createServer(app);
+
+// const io = require("socket.io")(httpServer, {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"]
+//   }
+// });
+
+const io = new Server(httpServer, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"]
+    }
+  });
+  
+
+
+// Server
+io.sockets.on('connection', function(socket) {
+    console.log(socket.id); // Nått lång och slumpat
+    console.log("HEUJ")
+});
 
 // Just for testing the sever
 app.get("/", (req, res) => {
