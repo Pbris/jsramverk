@@ -31,12 +31,13 @@ const io = new Server(httpServer, {
 
 
 io.sockets.on('connection', function(socket) {
-    let room;
+
     socket.on('create', function(room) {
         socket.join(room);
     });
 
     socket.on('updateDoc', function(doc) {
+        //Skicka till mongoDB//
         socket.to(doc._id).emit("updateDoc", doc);
     });
 });
