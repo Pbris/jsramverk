@@ -5,11 +5,9 @@ import SingleDocument from './Views/SingleDocument';
 import AddNew from './Views/AddNew';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
-
+import {BACKEND_URL} from "./connSettings";
 
 import { io } from "socket.io-client";
-
-const SERVER_URL = "http://localhost:3000";
 
 let socket: any;
 
@@ -18,13 +16,17 @@ function App(): JSX.Element {
   const [view, setView] = useState("List");
   const [docId, setDocId] = useState("");
 
-  useEffect(() => {
-    socket = io(SERVER_URL);
+  // useEffect(() => {
+  //   socket = io(BACKEND_URL);
+  //   socket.emit("create", docId);
+  //   console.log()
 
-    return () => {
-      socket.disconnect();
-    }
-  }, [docId]);
+  //   return () => {
+  //     socket.disconnect();
+  //   }
+  // }, [docId]);
+
+
   // Function to render the current component using a switch statement
   function renderComponent() {
     switch (view) {

@@ -9,22 +9,11 @@ dotenv.config();
 import { Server } from 'socket.io';
 
 
-
-// // MongoDB
-// const database = require("../db/database.mjs");
-
-
-
-
-import documents from "../docs.mjs";
 import express from 'express';
 import cors from 'cors';
 
-// const mongo = require("mongodb").MongoClient;
 let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk`;
 
-// Express server
-// const port = process.env.DBWEBB_PORT || 1337;
 const port = process.env.PORT || 1337;
 
 const app = express();
@@ -33,26 +22,23 @@ app.use(cors());
 app.use(express.json());
 const httpServer = http.createServer(app);
 
-// const io = require("socket.io")(httpServer, {
-//   cors: {
-//     origin: "http://localhost:3000",
-//     methods: ["GET", "POST"]
-//   }
-// });
-
 const io = new Server(httpServer, {
     cors: {
       origin: "http://localhost:3000",
       methods: ["GET", "POST"]
     }
   });
-  
 
 
-// Server
 io.sockets.on('connection', function(socket) {
-    console.log(socket.id); // Nått lång och slumpat
-    console.log("HEUJ")
+    let room;
+    socket.on('create', function(room) {
+        socket.join(room);
+    });
+
+    socket.on('updateDoc', function(doc) {
+        socket.to(doc._id).emit("updateDoc", doc);
+    });
 });
 
 // Just for testing the sever
@@ -74,15 +60,26 @@ app.use('/api', apiRoutes);
 // Export the app for testing purposes
 export { app };
 
-// Startup server and liten on port
-if(process.env.NODE_ENV !== 'test') {
-    app.listen(port, () => {
-        console.log(`Server is listening on ${port}`);
-        console.log(`DSN is: ${dsn}`);
+// // Startup server and liten on port
+// if(process.env.NODE_ENV !== 'test') {
+//     app.listen(port, () => {
+//         console.log(`Server is listening on ${port}`);
+//         console.log(`DSN is: ${dsn}`);
+//     });
+// } else {
+//     console.log("Server is not running, it is started in test mode");
+// }
+
+// Start server and listen on port
+if (process.env.NODE_ENV !== 'test') {
+    httpServer.listen(port, () => {
+      console.log(`Server is listening on ${port}`);
+      console.log(`DSN is: ${dsn}`);
     });
-} else {
+  } else {
     console.log("Server is not running, it is started in test mode");
-}
+  }
+
 
 // /**
 //  * Find documents in an collection by matching search criteria.
