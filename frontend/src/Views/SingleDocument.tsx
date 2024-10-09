@@ -1,17 +1,25 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { io, Socket } from "socket.io-client";
 import { BACKEND_URL } from '../connSettings';
 
-function SingleDocument(props: { id: string }) {
-  const [doc, setDocs] = useState({_id: 0, title:"", content:""});
-  const [submit, setSubmit] = useState(false);
-  const [confirmation, setConfirmation] = useState(false);
+interface Document {
+  _id: string;
+  title: string;
+  content: string;
+}
 
+function SingleDocument(props: { id: string }) {
+  const [doc, setDoc] = useState({ _id: "", title: "", content: "" });
+  
+  const socket = useRef<Socket | null>(null);
+
+    /** fetch data **/
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/api/${props.id}`);
         const data = await response.json();
-        setDocs(data);
+        setDoc(data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -20,52 +28,52 @@ function SingleDocument(props: { id: string }) {
     fetchData();
   }, [props.id]);
 
-  useEffect(() => {
-    const updateDocument = async () => {
-      if (submit) {
-        await fetch(`${BACKEND_URL}/api/update`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(doc),
-            });
-            setSubmit(false);
+    /** connect to socket, join room **/
+    useEffect(() => {
+      socket.current = io(BACKEND_URL);
+      // Join a room based on the document ID
+      socket.current.emit("create", props.id);
+      socket.current?.on("doc", (updatedDoc: Document) => {
+        setDoc(updatedDoc);
+      });
 
-            setConfirmation(true);
-            setTimeout(() => {
-              setConfirmation(false);
-            }, 3000);
+      return () => {
+        socket.current?.disconnect();
+      }
+    }, []);
 
-        }
-    };
-    updateDocument();
-  }, [submit, doc]);
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const { name, value } = e.target;
+    const updatedDoc = { ...doc, [name]: value };
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSubmit(true);
-}
-    return (
+    if (socket.current) {
+      socket.current.emit("doc", updatedDoc);
+    }
+    
+  }
 
-      <>
+  return (
+    <>
       <h2>Dokument</h2>
-      <form onSubmit={handleSubmit} className="new-doc">
-          <label htmlFor="title">Titel</label>
-              <input type="text" name="title" id="title-text" value={doc.title}
-              onChange={(e) => setDocs({ ...doc, title: e.target.value })}/>
-              <label htmlFor="content">Innehåll</label>
-              <textarea name="content" id="content-text" value={doc.content}
-              onChange={(e) => setDocs({ ...doc, content: e.target.value })}></textarea>
-          <input type="submit" value="Uppdatera" disabled={submit}/>
-      </form>
-
-      {confirmation && (
-        <p style={{ color: 'green' }}>Dokumentet har uppdaterats!</p>
-      )}
-
-        </>
-      );
+      <div className="document-form">
+        <label htmlFor="title">Titel</label>
+        <input 
+          type="text" 
+          name="title" 
+          id="title-text" 
+          value={doc.title}
+          onChange={handleChange}
+        />
+        <label htmlFor="content">Innehåll</label>
+        <textarea 
+          name="content" 
+          id="content-text" 
+          value={doc.content}
+          onChange={handleChange}
+        ></textarea>
+      </div>
+    </>
+  );
 }
 
 export default SingleDocument;
