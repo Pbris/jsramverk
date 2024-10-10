@@ -72,6 +72,13 @@ function SingleDocument(props: { id: string }) {
           onChange={handleChange}
         ></textarea>
       </div>
+      <div className="editor-text">
+        <div className="edit-title">
+        {doc.title}
+        </div>
+        <div className="editor-content" dangerouslySetInnerHTML={{__html: doc.content}}>
+        </div>
+      </div>
     </>
   );
 }
