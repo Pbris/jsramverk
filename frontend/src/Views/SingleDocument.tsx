@@ -8,10 +8,12 @@ interface Document {
   content: string;
 }
 
+
 function SingleDocument(props: { id: string }) {
   const [doc, setDoc] = useState({ _id: "", title: "", content: "" });
-  
   const socket = useRef<Socket | null>(null);
+  const cursorPositionRef = useRef<number | null>(null);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
 
     /** fetch data **/
   useEffect(() => {
@@ -35,21 +37,31 @@ function SingleDocument(props: { id: string }) {
       socket.current.emit("create", props.id);
       socket.current?.on("doc", (updatedDoc: Document) => {
         setDoc(updatedDoc);
+
       });
 
       return () => {
         socket.current?.disconnect();
       }
     }, []);
+  
+    /** Move cursor position **/
+
+    useEffect(() => {
+      if (contentRef.current) {
+        contentRef.current.setSelectionRange(cursorPositionRef.current, cursorPositionRef.current);
+      }
+    }, [doc]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
     const updatedDoc = { ...doc, [name]: value };
+    console.log(`Inuti handleChange ref: ${cursorPositionRef.current}`)
+    cursorPositionRef.current = e.target.selectionStart;
 
     if (socket.current) {
       socket.current.emit("doc", updatedDoc);
     }
-    
   }
 
   return (
@@ -65,7 +77,8 @@ function SingleDocument(props: { id: string }) {
           onChange={handleChange}
         />
         <label htmlFor="content">Innehåll</label>
-        <textarea 
+        <textarea
+        ref={contentRef}
           name="content" 
           id="content-text" 
           value={doc.content}
