@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { io, Socket } from "socket.io-client";
 import { BACKEND_URL } from '../connSettings';
 
@@ -8,15 +8,11 @@ interface Document {
   content: string;
 }
 
-
 function SingleDocument(props: { id: string }) {
-  const [doc, setDoc] = useState({ _id: "", title: "", content: "" });
+  const [doc, setDoc] = useState<Document>({ _id: "", title: "", content: "" });
   const socket = useRef<Socket | null>(null);
-  const cursorPositionRef = useRef<number | null>(null);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
-  const titleRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-    /** fetch data **/
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,44 +23,93 @@ function SingleDocument(props: { id: string }) {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
-  }, [props.id]);
 
-  /** connect to socket, join room **/
-  useEffect(() => {
     socket.current = io(BACKEND_URL);
-    // Join a room based on the document ID
     socket.current.emit("create", props.id);
     socket.current?.on("doc", (updatedDoc: Document) => {
       setDoc(updatedDoc);
-
     });
 
     return () => {
       socket.current?.disconnect();
     }
-  }, []);
-  
-    /** Move cursor position to original state**/
-    useEffect(() => {
-      if (contentRef.current) {
-        contentRef.current.setSelectionRange(cursorPositionRef.current, cursorPositionRef.current);
-      }
-  
-      if (titleRef.current) {
-        titleRef.current.setSelectionRange(cursorPositionRef.current, cursorPositionRef.current);
-      }
-    }, [doc]);
+  }, [props.id]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value } = e.target;
+  function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.FormEvent<HTMLDivElement>) {
+    let name: string;
+    let value: string;
+
+    if (e.target instanceof HTMLInputElement) {
+      name = e.target.name;
+      value = e.target.value;
+    } else if (e.currentTarget instanceof HTMLDivElement) {
+      name = 'content';
+      value = e.currentTarget.innerHTML;
+    } else {
+      return;
+    }
+
     const updatedDoc = { ...doc, [name]: value };
-    cursorPositionRef.current = e.target.selectionStart;
-
+    setDoc(updatedDoc);
     if (socket.current) {
       socket.current.emit("doc", updatedDoc);
     }
+  }
+
+  function addComment() {
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed && contentRef.current) {
+      const range = selection.getRangeAt(0);
+      const commentId = Date.now().toString();
+      const commentText = prompt("Enter your comment") || "";
+      
+      const span = document.createElement('span');
+      span.id = `comment-${commentId}`;
+      span.title = commentText;
+      range.surroundContents(span);
+
+      handleChange({ currentTarget: contentRef.current } as React.FormEvent<HTMLDivElement>);
+
+      selection.removeAllRanges();
+    }
+  }
+
+  function showComments() {
+    const selection = window.getSelection();
+    const spanTags = document.getElementsByTagName('span'); // returns an HTMLCollection
+    const commentList = document.getElementById("comments-list");
+    if (commentList) {
+      commentList.innerHTML = "";
+    }
+
+    Array.from(spanTags).forEach((span) => {
+      // console.log(span);
+      console.log(span.innerHTML + "inner");
+      
+      let listObject = document.createElement('button');
+      listObject.onclick = (event) => deleteComment(event, span);
+      
+      listObject.innerText = span.textContent ?? "Tomt";
+      commentList?.appendChild(listObject);
+      console.log(span.textContent);
+    });
+
+    if (selection && !selection.isCollapsed && contentRef.current) {
+
+    }
+  }
+
+  function deleteComment(event: MouseEvent, span: HTMLElement) {
+    var text = document.createTextNode(span.innerHTML);
+    span.parentNode?.insertBefore(text, span);
+    span.remove();
+    if (event.target instanceof HTMLElement) {
+      event.target.remove();
+    }
+
+    handleChange({ currentTarget: contentRef.current } as React.FormEvent<HTMLDivElement>);
+    
   }
 
   return (
@@ -73,29 +118,37 @@ function SingleDocument(props: { id: string }) {
       <div className="document-form">
         <label htmlFor="title">Titel</label>
         <input
-          ref={titleRef}
-          type="text" 
+          type="text"
           name="title" 
           id="title-text" 
           value={doc.title}
           onChange={handleChange}
         />
         <label htmlFor="content">Innehåll</label>
-        <textarea
+        <div 
           ref={contentRef}
-          name="content" 
           id="content-text" 
-          value={doc.content}
-          onChange={handleChange}
-        ></textarea>
+          contentEditable={true}
+          onInput={handleChange}
+          dangerouslySetInnerHTML={{ __html: doc.content }}
+          style={{ border: '1px solid black', minHeight: '100px', padding: '5px' }}
+        />
+        <button onClick={addComment}>Add Comment</button>
       </div>
-      <div className="editor-text">
-        <div className="edit-title">
-        {doc.title}
-        </div>
-        <div className="editor-content" dangerouslySetInnerHTML={{__html: doc.content}}>
-        </div>
-      </div>
+      <button onClick={showComments}>
+        Show comments
+      </button>
+      <div id="comments-list"></div>
+      <style>{`
+        #content-text span[id^="comment-"] {
+          background-color: yellow;
+          cursor: pointer;
+        }
+        #content-text span[id^="comment-"]::after {
+          content: " 💬";
+          font-size: 0.8em;
+        }
+      `}</style>
     </>
   );
 }
