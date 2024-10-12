@@ -12,6 +12,8 @@ function SingleDocument(props: { id: string }) {
   const [doc, setDoc] = useState<Document>({ _id: "", title: "", content: "" });
   const socket = useRef<Socket | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<number | null>(null);
+  const cursorElement = useRef<string>("title");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,9 +38,20 @@ function SingleDocument(props: { id: string }) {
     }
   }, [props.id]);
 
+
+  useEffect(() => {
+    if (cursorElement.current === "content") {
+      setCursorPosition();
+    }
+  }, [doc])
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.FormEvent<HTMLDivElement>) {
     let name: string;
     let value: string;
+    cursorElement.current = "title";
+    if (e.target === contentRef.current) {
+      cursorElement.current = "content";
+    }
 
     if (e.target instanceof HTMLInputElement) {
       name = e.target.name;
@@ -54,6 +67,43 @@ function SingleDocument(props: { id: string }) {
     setDoc(updatedDoc);
     if (socket.current) {
       socket.current.emit("doc", updatedDoc);
+    }
+    getCursorPosition();
+  }
+
+  function getCursorPosition() {
+        const target = contentRef.current;
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0 && target) {
+          const range = selection.getRangeAt(0);
+          const preCaretRange = range.cloneRange();
+          preCaretRange.selectNodeContents(target);
+          preCaretRange.setEnd(range.endContainer, range.endOffset);
+          cursorRef.current = preCaretRange.toString().length;
+          console.log("Cursor position  :", cursorRef.current);
+        }
+  }
+
+
+  function setCursorPosition() {
+    if (!contentRef.current || cursorRef.current === null) return;
+  
+    const range = document.createRange();
+    const sel = window.getSelection();
+    let currentOffset = 0;
+  
+    const walker = document.createTreeWalker(contentRef.current, NodeFilter.SHOW_TEXT);
+    let node;
+    while (node = walker.nextNode()) {
+      const nodeLength = node.textContent?.length || 0;
+      if (currentOffset + nodeLength >= cursorRef.current) {
+        range.setStart(node, cursorRef.current - currentOffset);
+        range.collapse(true);
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+        break;
+      }
+      currentOffset += nodeLength;
     }
   }
 
@@ -92,7 +142,7 @@ function SingleDocument(props: { id: string }) {
       
       listObject.innerText = span.textContent ?? "Tomt";
       commentList?.appendChild(listObject);
-      console.log(span.textContent);
+      // console.log(span.textContent);
     });
 
     if (selection && !selection.isCollapsed && contentRef.current) {
