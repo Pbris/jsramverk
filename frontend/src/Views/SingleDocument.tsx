@@ -133,6 +133,12 @@ function SingleDocument(props: { id: string }) {
       commentList.innerHTML = "";
     }
 
+    if (spanTags.length > 0) {
+      const header = document.createElement('h3');
+      header.innerHTML = "Click a comment to remove it:";
+      commentList?.appendChild(header);
+    }
+
     Array.from(spanTags).forEach((span) => {
       // console.log(span);
       console.log(span.innerHTML + "inner");
@@ -183,20 +189,16 @@ function SingleDocument(props: { id: string }) {
           dangerouslySetInnerHTML={{ __html: doc.content }}
           style={{ border: '1px solid black', minHeight: '100px', padding: '5px' }}
         />
-        <button onClick={addComment}>Add Comment</button>
+        <button onClick={addComment}><h3>Add Comment</h3></button>
       </div>
       <button onClick={showComments}>
-        Show comments
+        <h3>Show/delete comments</h3>
       </button>
       <div id="comments-list"></div>
       <style>{`
         #content-text span[id^="comment-"] {
           background-color: yellow;
           cursor: pointer;
-        }
-        #content-text span[id^="comment-"]::after {
-          content: " 💬";
-          font-size: 0.8em;
         }
       `}</style>
     </>
