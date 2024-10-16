@@ -83,9 +83,9 @@ footer {
 }
 
 ul.list-doc {
-    list-style-type: none;      /* Remove bullet points */
-    padding: 0;                 /* Remove default padding from ul */
-    margin: 0 0 1rem 0rem;                  /* Remove default margin */
+    list-style-type: none;      
+    padding: 0;                 
+    margin: 0 0 1rem 0rem;                  
 }
 
 ul.list-doc button {
@@ -98,7 +98,7 @@ ul.list-doc button {
 }
 
 ul.list-doc button:hover {
-    background-color: #e0e0e0;   /* Lighter background on hover */
+    background-color: #e0e0e0;   
 }
 
 .navbar {
@@ -120,3 +120,22 @@ ul.list-doc button:hover {
 .navbar button:hover {
     background-color: #d3e0ff;  
 }
+
+#comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+  }
+  
+  #comments-list button {
+    padding: 5px 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    width: fit-content;
+  }
+  
+  #comments-list button:hover {
+    background-color: #ddd;
+  }
