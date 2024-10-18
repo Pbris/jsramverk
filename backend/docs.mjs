@@ -1,9 +1,7 @@
-// import './db/database.mjs';
 import { ObjectId } from 'mongodb';
+import { database } from './db/database.mjs';
 
-import {database} from './db/database.mjs';
 const docs = {
-
     getAll: async function getAll() {
         const { collection, client } = await database.getDb();
 
@@ -20,8 +18,7 @@ const docs = {
     getOne: async function getOne(id) {
         const { collection, client } = await database.getDb();
         try {
-            // Assuming `id` is a MongoDB ObjectId, you may need to import ObjectId from "mongodb"
-            return await collection.findOne({ _id: new ObjectId(id)});
+            return await collection.findOne({ _id: new ObjectId(id) });
         } catch (e) {
             console.error(e);
             return {};
@@ -36,6 +33,7 @@ const docs = {
             return await collection.insertOne({
                 title: body.title,
                 content: body.content,
+                isCode: body.isCode || false,
             });
         } catch (e) {
             console.error(e);
@@ -49,7 +47,13 @@ const docs = {
         try {
             return await collection.updateOne(
                 { _id: new ObjectId(id) },
-                { $set: body }
+                { 
+                    $set: {
+                        title: body.title,
+                        content: body.content,
+                        isCode: body.isCode
+                    } 
+                }
             );
         } catch (e) {
             console.error(e);
