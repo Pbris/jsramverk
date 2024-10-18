@@ -11,6 +11,9 @@
   "dependencies": {
   
     
+  "@codemirror/lang-javascript": "^6.2.2",
+  
+    
   "@testing-library/jest-dom": "^5.17.0",
   
     
@@ -30,6 +33,9 @@
   
     
   "@types/react-dom": "^18.3.0",
+  
+    
+  "@uiw/react-codemirror": "^4.23.5",
   
     
   "react": "^18.3.1",
