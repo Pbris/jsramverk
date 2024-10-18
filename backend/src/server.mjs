@@ -7,6 +7,17 @@ import { Server } from 'socket.io';
 dotenv.config();
 "use strict";
 
+const visual = true;
+import { graphqlHTTP } from 'express-graphql';
+// const {
+//   GraphQLSchema
+// } = require("graphql");
+
+import { GraphQLSchema } from "graphql";
+
+import RootQueryType from "./graphql/root.mjs";
+
+
 import apiRoutes from '../routes/api.mjs'; 
 
 import documents from "../docs.mjs";
@@ -68,6 +79,15 @@ io.sockets.on('connection', function(socket) {
         console.log('A user disconnected');
     });
 });
+
+const schema = new GraphQLSchema({
+    query: RootQueryType
+});
+
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    graphiql: visual,
+}));
 
 // Just for testing the sever
 app.get("/", (req, res) => {
