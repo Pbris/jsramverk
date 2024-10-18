@@ -18,63 +18,30 @@ function SingleDocument(props: { id: string }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<number | null>(null);
   const cursorElement = useRef<string>("title");
-  const effectRan = useRef(false);
 
-  /** Fetch document data  **/
+  /** Fetch document data and set up socket connection **/
   useEffect(() => {
-    if (effectRan.current === false) {
     const fetchData = async () => {
-        try {
-          // const response = await fetch(`${BACKEND_URL}/api/${props.id}`);
-          // const data = await response.json();
-          // setDoc(data);
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/${props.id}`);
+        const data = await response.json();
+        setDoc(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
 
-          const response = await fetch(`${BACKEND_URL}/graphql`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-            body: JSON.stringify({ query: `{ document(id: "${props.id}") { _id title content isCode } }` })
-          });
-          const result = await response.json();
-          if (result.data && result.data.document) {
-            setDoc(result.data.document);
-          }
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-      fetchData();
+    socket.current = io(BACKEND_URL);
+    socket.current.emit("create", props.id);
+    socket.current?.on("doc", (updatedDoc: Document) => {
+      setDoc(updatedDoc);
+    });
 
-      // socket.current = io(BACKEND_URL);
-      // socket.current.emit("create", props.id);
-      // socket.current?.on("doc", (updatedDoc: Document) => {
-      //   setDoc(updatedDoc);
-      // });
-    }
-
-    return () => {
-      // socket.current?.disconnect();
-      effectRan.current = true;
-    }
-  }, [props.id]);
-
-  /** Set up socket connection **/
-  useEffect(() => {
-
-      socket.current = io(BACKEND_URL);
-      socket.current.emit("create", props.id);
-      socket.current?.on("doc", (updatedDoc: Document) => {
-        setDoc(updatedDoc);
-      });
-  
     return () => {
       socket.current?.disconnect();
     }
   }, [props.id]);
-
-
 
   /** Set cursor position in content area **/
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { BACKEND_URL } from '../connSettings';
 
 
@@ -13,20 +13,35 @@ interface Item {
 function List(props: any) {
   // Explicitly type the state
   const [items, setItems] = useState<Item[]>([]);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/api`);
-        const data: Item[] = await response.json();
-        setItems(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
+  const effectRan = useRef(false);
 
+  useEffect(() => {
+    if (effectRan.current === false) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`${BACKEND_URL}/graphql`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({ query: "{ documents { _id title content isCode } }" })
+          });
+          const result = await response.json();
+          if (result.data && result.data.documents) {
+            setItems(result.data.documents);
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }
+    return () => {
+      effectRan.current = true;
+    };
   }, []);
+
 
 
   function showSingleDocument(id: string)
