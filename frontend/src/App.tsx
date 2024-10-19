@@ -23,6 +23,10 @@ function App(): JSX.Element {
           return <div>Hej och välkommen</div>;
       case "SingleDocument":
         return <SingleDocument id={docId} />;
+      case "Register":
+        return <div>Register</div>;
+      case "Login":
+        return <div>Login</div>;
       default:
         return <div></div>;
     }
@@ -39,6 +43,8 @@ function App(): JSX.Element {
       <button onClick={() => changeView("Home")}>Home</button>
       <button onClick={() => changeView("List")}>List</button>
       <button onClick={() => changeView("AddNew")}>AddNew</button>
+      <button onClick={() => changeView("Register")}>Register</button>
+      <button onClick={() => changeView("Login")}>Login</button>
       </div>
       {renderComponent()}
       <Footer/>
