@@ -51,10 +51,8 @@ function Login(){
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
-                console.log('fetchData() completed');
             }
             fetchData();
-            alert(`Successfully logged in with email ${email}`);
         } else {
             alert('Missing form data');
         }

@@ -12,8 +12,6 @@ function Registration() {
         if (emailInputRef.current && passwordInputRef.current) {
             const email = emailInputRef.current.value;
             const password = passwordInputRef.current.value;
-            // const hashedPassword = await bcrypt.hash(password, 10);
-            // moving to server side hashing
 
             const query = `
             mutation($email: String!, $password: String!) {
@@ -54,7 +52,7 @@ function Registration() {
                 console.log('fetchData() completed');
             }
             fetchData();
-            alert(`Successfully registered with email ${email} and password ${password}`);
+            alert(`Successfully registered with email ${email}`);
         } else {
             alert('Missing form data');
         }
