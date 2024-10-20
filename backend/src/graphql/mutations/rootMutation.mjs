@@ -27,7 +27,7 @@ const RootMutationType = new GraphQLObjectType({
                 email: { type: GraphQLString },
                 password: { type: GraphQLString }
             },
-            resolve: async function(parent, args) {
+            resolve: async function (parent, args) {
                 return users.addUser(args);
             }
         },
@@ -38,9 +38,15 @@ const RootMutationType = new GraphQLObjectType({
                 email: { type: GraphQLString },
                 password: { type: GraphQLString }
             },
-            resolve: async function(parent, args) {
-                console.log(args);
-                return await users.verifyUser(args.email, args.password);
+            resolve: async function (parent, args) {
+                const user = await users.verifyUser(args.email, args.password);
+
+                if (!user.token) {
+                    return { error: "Invalid credentials" };
+                    // not sure how to manage errors here...
+                    //throw new Error("Invalid credentials");
+                }
+                return user;
             }
         }
     })
