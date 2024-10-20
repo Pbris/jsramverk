@@ -3,7 +3,7 @@ import { database } from './db/database.mjs';
 
 const docs = {
     getAll: async function getAll() {
-        const { collection, client } = await database.getDb();
+        const { collection, client } = await database.getDb('jsramverk');
 
         try {
             return await collection.find({}).toArray();
@@ -16,7 +16,7 @@ const docs = {
     },
 
     getOne: async function getOne(id) {
-        const { collection, client } = await database.getDb();
+        const { collection, client } = await database.getDb('jsramverk');
         try {
             return await collection.findOne({ _id: new ObjectId(id) });
         } catch (e) {
@@ -28,7 +28,7 @@ const docs = {
     },
 
     addOne: async function addOne(body) {
-        const { collection, client } = await database.getDb();
+        const { collection, client } = await database.getDb('jsramverk');
         try {
             return await collection.insertOne({
                 title: body.title,
@@ -43,7 +43,7 @@ const docs = {
     },
 
     updateOne: async function updateOne(id, body) {
-        const { collection, client } = await database.getDb();
+        const { collection, client } = await database.getDb('jsramverk');
         try {
             return await collection.updateOne(
                 { _id: new ObjectId(id) },
