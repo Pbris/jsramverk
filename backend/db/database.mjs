@@ -46,25 +46,35 @@ const client = new MongoClient(uri, {
 });
 
 
-async function run() {
+// async function run() {
+//   try {
+//     // Connect the client to the server	(optional starting in v4.7)
+//     await client.connect();
+//     // Send a ping to confirm a successful connection
+//     await client.db("admin").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//   } finally {
+//     // Ensures that the client will close when you finish/error
+//     await client.close();
+//   }
+// }
+// run().catch(console.dir);
+
+async function connectToDatabase() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    console.log("Successfully connected to MongoDB!");
+  } catch (error) {
+    console.error("Could not connect to MongoDB:", error);
+    throw error;
   }
 }
-run().catch(console.dir);
 
 const database = {
     getDb: async function getDb (collectionName) {
-      await client.connect();
-      const db = await client.db();
-      const collection = await db.collection(collectionName);
+      // await client.connect();
+      const db = client.db();
+      const collection = db.collection(collectionName);
         return {
             collection: collection,
             client: client,
@@ -72,5 +82,5 @@ const database = {
     }
 };
 
-export { database }
+export { database, connectToDatabase };
 

@@ -3,6 +3,7 @@
  */
 import dotenv from 'dotenv';
 import http from 'http';
+import { connectToDatabase } from '../db/database.mjs';
 import { Server } from 'socket.io';
 dotenv.config();
 "use strict";
@@ -16,6 +17,7 @@ import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from "graphql";
 
 import RootQueryType from "./graphql/root.mjs";
+import RootMutationType from "./graphql/mutations/rootMutation.mjs";
 
 
 import apiRoutes from '../routes/api.mjs'; 
@@ -82,8 +84,11 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
+connectToDatabase();
+
 const schema = new GraphQLSchema({
-    query: RootQueryType
+    query: RootQueryType,
+    mutation: RootMutationType
 });
 
 app.use('/graphql', graphqlHTTP({

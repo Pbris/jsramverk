@@ -10,8 +10,6 @@ const docs = {
         } catch (e) {
             console.error(e);
             return [];
-        } finally {
-            await client.close();
         }
     },
 
@@ -22,8 +20,6 @@ const docs = {
         } catch (e) {
             console.error(e);
             return {};
-        } finally {
-            await client.close();
         }
     },
 
@@ -37,8 +33,6 @@ const docs = {
             });
         } catch (e) {
             console.error(e);
-        } finally {
-            await client.close();
         }
     },
 
@@ -57,8 +51,6 @@ const docs = {
             );
         } catch (e) {
             console.error(e);
-        } finally {
-            await client.close();
         }
     }
 };
