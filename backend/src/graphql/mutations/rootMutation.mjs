@@ -21,6 +21,18 @@ const RootMutationType = new GraphQLObjectType({
                 return users.addUser(args);
             }
         },
+        verifyUser: {
+            type: UsersType,
+            description: 'Verify a user',
+            args: {
+                email: { type: GraphQLString },
+                password: { type: GraphQLString }
+            },
+            resolve: async function(parent, args) {
+                console.log(args);
+                return users.verifyUser(args.email, args.password);
+            }
+        }
     })
 });
 

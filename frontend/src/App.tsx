@@ -5,12 +5,23 @@ import SingleDocument from './Views/SingleDocument';
 import AddNew from './Views/AddNew';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import Registration from './Components/Registration/Registration';
+import Login from './Components/Login/Login';
+import UserList from './Components/UserList';
 
 
 
 function App(): JSX.Element {
   const [view, setView] = useState("List");
   const [docId, setDocId] = useState("");
+  const [count, setCount] = useState(0);
+
+  // Function to handle button click and update the count
+  function registerUser(Event: any) {
+      alert('Successfully registered');
+
+      setCount(count + 1);
+  }
 
   // Function to render the current component using a switch statement
   function renderComponent() {
@@ -24,9 +35,11 @@ function App(): JSX.Element {
       case "SingleDocument":
         return <SingleDocument id={docId} />;
       case "Register":
-        return <div>Register</div>;
+        return <Registration />;
       case "Login":
-        return <div>Login</div>;
+        return <Login />;
+      case "UserList":
+        return <UserList />;
       default:
         return <div></div>;
     }
@@ -45,6 +58,7 @@ function App(): JSX.Element {
       <button onClick={() => changeView("AddNew")}>AddNew</button>
       <button onClick={() => changeView("Register")}>Register</button>
       <button onClick={() => changeView("Login")}>Login</button>
+      <button onClick={() => changeView("UserList")}>UserList</button>
       </div>
       {renderComponent()}
       <Footer/>

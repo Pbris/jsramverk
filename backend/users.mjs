@@ -27,8 +27,10 @@ const users = {
         console.log("addUser", body);
         const { collection, client } = await database.getDb("users");
         try {
-            const emailAlreadyExists = await this.getOneByUsername(body.email) !== null ? true : false;
-            if (emailAlreadyExists) {
+            const data = await this.getOneByUsername(body.email);
+            console.log(data);
+            if (data !== null) {
+                console.log("Cannot register user");
                 return { error: "Cannot register user" };
             }
             const hashedPassword = await bcrypt.hash(body.password, 10);
@@ -44,8 +46,9 @@ const users = {
     verifyUser: async function verifyUser(email, password) {
         const { collection, client } = await database.getDb("users");
         try {
-            const user = await collection.getOneByUsername(email);
+            const user = await this.getOneByUsername(email);
             if (await bcrypt.compare(password, user.hashedPassword)) {
+                console.log("User is verified");
                 return user;
             } else {
                 return {};
