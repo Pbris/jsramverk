@@ -44,8 +44,8 @@ function Login(){
                     const result = await response.json();
                     if (result.data && result.data.verifyUser && result.data.verifyUser._id) {
                         console.log(result.data.verifyUser._id);
+                        localStorage.setItem('token', result.data.verifyUser.token);
                     } else {
-                        console.log('No data returned');
                         console.error("Authentication failed:", result.errors);
                     }
                 } catch (error) {
