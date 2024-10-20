@@ -40,7 +40,9 @@ const io = new Server(httpServer, {
     cors: {
     origin: [
             "http://localhost:3000",
-            "https://www.student.bth.se"
+            "http://localhost:3001",
+            "https://www.student.bth.se",
+            "http://localhost:1337"
           ],
     methods: ["GET", "POST"]
 }
