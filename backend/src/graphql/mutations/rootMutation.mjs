@@ -6,6 +6,16 @@ import {
 import UsersType from "../users.mjs";
 import users from "../../../users.mjs";
 
+const LoginResponseType = new GraphQLObjectType({
+    name: 'LoginResponse',
+    description: 'Response for user login',
+    fields: {
+        token: { type: GraphQLString }, // Return the token here
+        _id: { type: GraphQLString },   // Optional: Return user _id
+        email: { type: GraphQLString }  // Optional: Return user email
+    }
+});
+
 const RootMutationType = new GraphQLObjectType({
     name: 'Mutation',
     description: 'Root Mutation',
@@ -22,7 +32,7 @@ const RootMutationType = new GraphQLObjectType({
             }
         },
         verifyUser: {
-            type: UsersType,
+            type: LoginResponseType,
             description: 'Verify a user',
             args: {
                 email: { type: GraphQLString },
@@ -30,7 +40,7 @@ const RootMutationType = new GraphQLObjectType({
             },
             resolve: async function(parent, args) {
                 console.log(args);
-                return users.verifyUser(args.email, args.password);
+                return await users.verifyUser(args.email, args.password);
             }
         }
     })

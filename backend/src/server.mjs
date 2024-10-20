@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import http from 'http';
 import { connectToDatabase } from '../db/database.mjs';
 import { Server } from 'socket.io';
+// not yet used, to be implemented as a middleware
+// import { expressjwt, ExpressJwtRequest } from "express-jwt";
 dotenv.config();
 "use strict";
 

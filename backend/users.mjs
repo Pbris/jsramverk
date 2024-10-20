@@ -1,5 +1,6 @@
 import { database } from './db/database.mjs';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const users = {
     
@@ -44,12 +45,21 @@ const users = {
     },
 
     verifyUser: async function verifyUser(email, password) {
-        const { collection, client } = await database.getDb("users");
         try {
             const user = await this.getOneByUsername(email);
             if (await bcrypt.compare(password, user.hashedPassword)) {
                 console.log("User is verified");
-                return user;
+                console.log({ _id: user._id, email: email })
+                // Create a token
+                const token = jwt.sign({ _id: user._id, email: email }, "NOT YET A SECRET", {
+                    expiresIn: "1h"
+                });
+                console.log(token);
+                return {
+                    token: token,
+                    _id: user._id,
+                    email: email
+                };
             } else {
                 return {};
             }

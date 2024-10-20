@@ -13,6 +13,7 @@ function Login(){
             const query = `
             mutation($email: String!, $password: String!) {
                 verifyUser(email: $email, password: $password) {
+                    token
                     _id
                     email
                 }
