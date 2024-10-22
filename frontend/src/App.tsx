@@ -16,13 +16,6 @@ function App(): JSX.Element {
   const [docId, setDocId] = useState("");
   const [count, setCount] = useState(0);
 
-  // Function to handle button click and update the count
-  function registerUser(Event: any) {
-      alert('Successfully registered');
-
-      setCount(count + 1);
-  }
-
   // Function to render the current component using a switch statement
   function renderComponent() {
     switch (view) {
@@ -31,12 +24,13 @@ function App(): JSX.Element {
       case "AddNew":
         return <AddNew setView={setView}/>;
       case "Home":
-          return <div>Hej och välkommen</div>;
+          return <div>Hej och välkommen {localStorage.getItem("email") ? localStorage.getItem("email") : "du okände!" }</div>;
       case "SingleDocument":
         return <SingleDocument id={docId} />;
       case "Register":
         return <Registration />;
       case "Login":
+        localStorage.removeItem('token');
         return <Login />;
       case "UserList":
         return <UserList />;
@@ -57,7 +51,7 @@ function App(): JSX.Element {
       <button onClick={() => changeView("List")}>List</button>
       <button onClick={() => changeView("AddNew")}>AddNew</button>
       <button onClick={() => changeView("Register")}>Register</button>
-      <button onClick={() => changeView("Login")}>Login</button>
+      <button onClick={() => changeView("Login")}>{localStorage.getItem('token') ? 'Logout' : 'Login'} </button>
       <button onClick={() => changeView("UserList")}>UserList</button>
       </div>
       {renderComponent()}

@@ -45,6 +45,8 @@ function Login(){
                     if (result.data && result.data.verifyUser && result.data.verifyUser._id) {
                         console.log(result.data.verifyUser._id);
                         localStorage.setItem('token', result.data.verifyUser.token);
+                        localStorage.setItem('userId', result.data.verifyUser._id);
+                        localStorage.setItem('email', result.data.verifyUser.email);
                     } else {
                         console.error("Authentication failed:", result.errors);
                     }
