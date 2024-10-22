@@ -38,6 +38,7 @@ const users = {
             return await collection.insertOne({
                 email: body.email,
                 hashedPassword: hashedPassword,
+                role: "user"
             });
         } catch (e) {
             console.error(e);
@@ -49,9 +50,9 @@ const users = {
             const user = await this.getOneByUsername(email);
             if (await bcrypt.compare(password, user.hashedPassword)) {
                 console.log("User is verified");
-                console.log({ _id: user._id, email: email })
+                console.log({ _id: user._id, email: email, role: user.role ? role : "user" });
                 // Create a token
-                const token = jwt.sign({ _id: user._id, email: email }, "NOT YET A SECRET", {
+                const token = jwt.sign({ _id: user._id, email: email, role: user.role ? role : "user" }, "NOT YET A SECRET", {
                     expiresIn: "1h"
                 });
                 console.log(token);

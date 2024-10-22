@@ -5,8 +5,7 @@ import dotenv from 'dotenv';
 import http from 'http';
 import { connectToDatabase } from '../db/database.mjs';
 import { Server } from 'socket.io';
-// not yet used, to be implemented as a middleware
-// import { expressjwt, ExpressJwtRequest } from "express-jwt";
+import { expressjwt } from "express-jwt";
 dotenv.config();
 "use strict";
 
@@ -37,6 +36,7 @@ const app = express();
 app.disable('x-powered-by');
 app.use(cors());
 app.use(express.json());
+
 
 const httpServer = http.createServer(app);
 
@@ -93,10 +93,19 @@ const schema = new GraphQLSchema({
     mutation: RootMutationType
 });
 
-app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    graphiql: visual,
-}));
+app.use(
+    '/graphql', 
+    expressjwt({
+        secret: "NOT YET A SECRET",
+        algorithms: ['HS256'],
+        credentialsRequired: false,
+    }),
+    graphqlHTTP((req, res) => ({
+        schema: schema,
+        context: { user: req.auth },
+        graphiql: visual,
+        }))
+    );
 
 // Just for testing the sever
 app.get("/", (req, res) => {

@@ -27,7 +27,11 @@ const RootQueryType = new GraphQLObjectType({
         documents: {
             type: new GraphQLList(DocumentsType),
             description: 'All documents',
-            resolve: async function() {
+            resolve: async function(parent, args, context) {
+                console.log("Happy happy? Yes?");
+                const user = context.user; // Retrieved from the JWT
+                console.log("Happy happy?: \n" + JSON.stringify(user, null, 2));
+                console.log(user.email);
                 return docs.getAll();
             }
         },

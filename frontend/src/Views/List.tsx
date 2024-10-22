@@ -24,6 +24,7 @@ function List(props: any) {
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
             body: JSON.stringify({ query: "{ documents { _id title content isCode } }" })
           });
