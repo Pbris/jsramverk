@@ -25,7 +25,8 @@ const RootMutationType = new GraphQLObjectType({
             description: 'Add a user',
             args: {
                 email: { type: GraphQLString },
-                password: { type: GraphQLString }
+                password: { type: GraphQLString },
+                role: { type: GraphQLString }
             },
             resolve: async function (parent, args) {
                 return users.addUser(args);
@@ -48,7 +49,24 @@ const RootMutationType = new GraphQLObjectType({
                 }
                 return user;
             }
+        },
+        sendInvite: {
+            type: GraphQLString,
+            description: 'Send an invite to edit a document',
+            args: {
+                email: { type: GraphQLString },
+                documentId: { type: GraphQLString }
+            },
+            resolve: async function (parent, args, context) {
+
+                if (document.ownerId !== context.user._id) {
+                    return { error: "Unauthorized" };
+                }
+
+                return users.sendInvite(args.email, args.documentId);
+            }
         }
+
     })
 });
 
