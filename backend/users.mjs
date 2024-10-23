@@ -38,7 +38,7 @@ const users = {
             return await collection.insertOne({
                 email: body.email,
                 hashedPassword: hashedPassword,
-                role: "user"
+                role: body.role || "user"
             });
         } catch (e) {
             console.error(e);
@@ -50,16 +50,17 @@ const users = {
             const user = await this.getOneByUsername(email);
             if (await bcrypt.compare(password, user.hashedPassword)) {
                 console.log("User is verified");
-                console.log({ _id: user._id, email: email, role: user.role ? role : "user" });
+                console.log({ _id: user._id, email: email, role: user?.role ? user.role : "user" });
                 // Create a token
-                const token = jwt.sign({ _id: user._id, email: email, role: user.role ? role : "user" }, "NOT YET A SECRET", {
+                const token = jwt.sign({ _id: user._id, email: email, role: user.role ? user.role : "user" }, "NOT YET A SECRET", {
                     expiresIn: "1h"
                 });
                 console.log(token);
                 return {
                     token: token,
                     _id: user._id,
-                    email: email
+                    email: email, 
+                    role: user.role ? user.role : "user"
                 };
             } else {
                 return {};
@@ -68,7 +69,32 @@ const users = {
             console.error(e);
             return {};
         }
+    },
+
+    sendInvite: async function sendInvite(senderId, receipientEmail, documentId) {
+
+        const token = jwt.sign({ documentId: documentId, receipientEmail: receipientEmail}, "NOT YET A SECRET", {
+            expiresIn: "72h"
+        });
+
+        await invitesCollection.insertOne({
+            senderId: senderId,
+            receipientEmail: receipientEmail,
+            documentId: documentId,
+            token: token,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + 72 * 60 * 60 * 1000)
+        });
+
+        const link = `http://localhost:3000/edit/${documentId}?token=${token}`;
+        sendEmail(receipientEmail, link);
+
+    },
+
+    sendEmail: async function sendEmail(to, link) {
+        console.log(`Not really sending email to ${to} with link: ${link}`);
     }
+                
 };
 
 export default users;
