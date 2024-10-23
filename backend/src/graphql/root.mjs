@@ -20,7 +20,16 @@ const RootQueryType = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLString }
             },
-            resolve: async function(parent, args) {
+            resolve: async function(parent, args, context) {
+                const doc = await docs.getOne(args.id);
+
+                // if (context.user && doc.owner === context.user.email) {
+                //     return docs.getOne(args.id);
+                // }
+
+
+                // return { error: "Invalid credentials" };
+
                 return docs.getOne(args.id);
             }
         },
