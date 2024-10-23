@@ -3,6 +3,7 @@ import { io, Socket } from "socket.io-client";
 import { BACKEND_URL } from '../connSettings';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import InviteEmailComponent from '../Components/InviteEmailComponent';
 
 interface Document {
   _id: string;
@@ -266,6 +267,9 @@ function SingleDocument(props: { id: string }) {
         )}
         {!doc.isCode && <button onClick={addComment}><h3>Add Comment</h3></button>}
       </div>
+      <InviteEmailComponent docId={doc._id}/>
+      {console.log(doc._id)}
+      {console.log(doc.title)}
       <button onClick={toggleCodeMode}>
         <h3>{doc.isCode ? "Switch to Text Mode" : "Switch to Code Mode"}</h3>
       </button>
