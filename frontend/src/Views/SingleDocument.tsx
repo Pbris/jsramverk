@@ -3,6 +3,8 @@ import { io, Socket } from "socket.io-client";
 import { BACKEND_URL } from '../connSettings';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import InviteEmailComponent from '../Components/InviteEmailComponent';
+import { useParams } from 'react-router-dom';
 
 interface Document {
   _id: string;
@@ -11,7 +13,8 @@ interface Document {
   isCode: boolean;
 }
 
-function SingleDocument(props: { id: string }) {
+function SingleDocument() {
+  const { docID } = useParams<{docID: string}>();
   const [doc, setDoc] = useState<Document>({ _id: "", title: "", content: "", isCode: false });
   const [executionResult, setExecutionResult] = useState<string | null>(null);
   const socket = useRef<Socket | null>(null);
@@ -25,6 +28,7 @@ function SingleDocument(props: { id: string }) {
     if (effectRan.current === false) {
     const fetchData = async () => {
         try {
+          console.log(docID);
           // const response = await fetch(`${BACKEND_URL}/api/${props.id}`);
           // const data = await response.json();
           // setDoc(data);
@@ -35,7 +39,7 @@ function SingleDocument(props: { id: string }) {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
             },
-            body: JSON.stringify({ query: `{ document(id: "${props.id}") { _id title content isCode } }` })
+            body: JSON.stringify({ query: `{ document(id: "${docID}") { _id title content isCode } }` })
           });
           const result = await response.json();
           if (result.data && result.data.document) {
@@ -58,13 +62,13 @@ function SingleDocument(props: { id: string }) {
       // socket.current?.disconnect();
       effectRan.current = true;
     }
-  }, [props.id]);
+  }, [docID]);
 
   /** Set up socket connection **/
   useEffect(() => {
 
       socket.current = io(BACKEND_URL);
-      socket.current.emit("create", props.id);
+      socket.current.emit("create", docID);
       socket.current?.on("doc", (updatedDoc: Document) => {
         setDoc(updatedDoc);
       });
@@ -72,7 +76,7 @@ function SingleDocument(props: { id: string }) {
     return () => {
       socket.current?.disconnect();
     }
-  }, [props.id]);
+  }, [docID]);
 
 
 
@@ -266,6 +270,9 @@ function SingleDocument(props: { id: string }) {
         )}
         {!doc.isCode && <button onClick={addComment}><h3>Add Comment</h3></button>}
       </div>
+      <InviteEmailComponent docId={doc._id}/>
+      {console.log(doc._id)}
+      {console.log(doc.title)}
       <button onClick={toggleCodeMode}>
         <h3>{doc.isCode ? "Switch to Text Mode" : "Switch to Code Mode"}</h3>
       </button>

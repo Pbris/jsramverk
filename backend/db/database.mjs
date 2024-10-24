@@ -3,7 +3,7 @@ dotenv.config();
 
 // import { MongoClient } from "mongodb";
 // // const config = require("./config.json");
-const collectionName = "jsramverk";
+// const collectionName = "jsramverk";
 
 // const database = {
 //     getDb: async function getDb () {
@@ -30,7 +30,7 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 
 let uri = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk`;
 
-if (process.env.NODE_ENV === 'test') {
+if (1 || process.env.NODE_ENV === 'test') {
   // Consider switching to a cloud hosted database for testing
   //uri = "mongodb://localhost:27017/test";
   uri=`mongodb+srv://${process.env.ATLAS_TEST_USERNAME}:${process.env.ATLAS_TEST_PASSWORD}@jsramverk-test.ywmci.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk-test`;
@@ -46,25 +46,35 @@ const client = new MongoClient(uri, {
 });
 
 
-async function run() {
+// async function run() {
+//   try {
+//     // Connect the client to the server	(optional starting in v4.7)
+//     await client.connect();
+//     // Send a ping to confirm a successful connection
+//     await client.db("admin").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//   } finally {
+//     // Ensures that the client will close when you finish/error
+//     await client.close();
+//   }
+// }
+// run().catch(console.dir);
+
+async function connectToDatabase() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    console.log("Successfully connected to MongoDB!");
+  } catch (error) {
+    console.error("Could not connect to MongoDB:", error);
+    throw error;
   }
 }
-run().catch(console.dir);
 
 const database = {
-    getDb: async function getDb () {
-      await client.connect();
-      const db = await client.db();
-      const collection = await db.collection(collectionName);
+    getDb: async function getDb (collectionName) {
+      // await client.connect();
+      const db = client.db();
+      const collection = db.collection(collectionName);
         return {
             collection: collection,
             client: client,
@@ -72,5 +82,5 @@ const database = {
     }
 };
 
-export { database }
+export { database, connectToDatabase };
 

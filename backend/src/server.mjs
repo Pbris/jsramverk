@@ -3,7 +3,9 @@
  */
 import dotenv from 'dotenv';
 import http from 'http';
+import { connectToDatabase } from '../db/database.mjs';
 import { Server } from 'socket.io';
+import { expressjwt } from "express-jwt";
 dotenv.config();
 "use strict";
 
@@ -16,9 +18,10 @@ import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from "graphql";
 
 import RootQueryType from "./graphql/root.mjs";
+import RootMutationType from "./graphql/mutations/rootMutation.mjs";
 
 
-import apiRoutes from '../routes/api.mjs'; 
+import apiRoutes from '../routes/api.mjs';
 
 import documents from "../docs.mjs";
 import express from 'express';
@@ -34,30 +37,33 @@ app.disable('x-powered-by');
 app.use(cors());
 app.use(express.json());
 
+
 const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
     cors: {
-    origin: [
+        origin: [
             "http://localhost:3000",
-            "https://www.student.bth.se"
-          ],
-    methods: ["GET", "POST"]
-}
+            "http://localhost:3001",
+            "https://www.student.bth.se",
+            "http://localhost:1337"
+        ],
+        methods: ["GET", "POST"]
+    }
 });
 
 let timeout;
 
 // Server
-io.sockets.on('connection', function(socket) {
+io.sockets.on('connection', function (socket) {
     console.log(socket.id);
-    
+
     socket.on('create', (room) => {
         console.log(`Socket ${socket.id} joining room ${room}`);
-        
+
         socket.join(room);
     });
-    
+
     socket.on('doc', async (data) => {
         console.log(`Received update for document ${data._id}:`, data);
 
@@ -71,23 +77,35 @@ io.sockets.on('connection', function(socket) {
                 title: data.title,
                 content: data.content
             });
-        }, 2000); 
+        }, 2000);
 
     });
-    
+
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });
 });
 
+connectToDatabase();
+
 const schema = new GraphQLSchema({
-    query: RootQueryType
+    query: RootQueryType,
+    mutation: RootMutationType
 });
 
-app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    graphiql: visual,
-}));
+app.use(
+    '/graphql',
+    expressjwt({
+        secret: "NOT YET A SECRET",
+        algorithms: ['HS256'],
+        credentialsRequired: false,
+    }),
+    graphqlHTTP((req, res) => ({
+        schema: schema,
+        context: { user: req.auth },
+        graphiql: visual,
+    }))
+);
 
 // Just for testing the sever
 app.get("/", (req, res) => {
@@ -101,7 +119,7 @@ app.use('/api', apiRoutes);
 export { app };
 
 // Startup server and liten on port
-if(process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test') {
     httpServer.listen(port, () => {
         console.log(`Server is listening on ${port}`);
     });

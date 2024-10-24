@@ -1,16 +1,13 @@
 import {useState, useEffect} from 'react';
 import { BACKEND_URL } from '../connSettings';
+import { useNavigate } from 'react-router-dom';
 
 
-type AddNewProps = {
-    setView: React.Dispatch<React.SetStateAction<string>>;
-}
-
-
-function AddNew( {setView} : AddNewProps) {
+function AddNew() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [submit, setSubmit] = useState(false);
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const submitForm = async () => {
@@ -24,11 +21,11 @@ function AddNew( {setView} : AddNewProps) {
                 });
 
                 setSubmit(false);
-                setView("List")
+                navigate("/documents");
             }
         }
         submitForm();
-    },[submit, title, content, setView])
+    },[submit, title, content, navigate])
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>){
             event.preventDefault();
