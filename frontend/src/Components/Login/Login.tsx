@@ -52,7 +52,7 @@ function Login() {
             try {
                 const response = await fetchData();
                 const result = await response.json();
-                console.log(response);
+                
                 if (response.ok) {
                     if (result.data && result.data.verifyUser && result.data.verifyUser._id) {
                         localStorage.setItem('token', result.data.verifyUser.token);

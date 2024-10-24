@@ -1,18 +1,20 @@
-import { useRef, useEffect } from 'react';
-// import bcrypt from 'bcryptjs';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../../connSettings';
 
 
 function Registration() {
     const emailInputRef = useRef<HTMLInputElement | null>(null);
     const passwordInputRef = useRef<HTMLInputElement | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
 
-    // consider implementing try / catch block
     async function handleRegistration() {
         if (emailInputRef.current && passwordInputRef.current) {
             const email = emailInputRef.current.value;
             const password = passwordInputRef.current.value;
-
+            
             const query = `
             mutation($email: String!, $password: String!) {
                 addUser(email: $email, password: $password) {
@@ -26,11 +28,10 @@ function Registration() {
                 password: password,
             };
 
-            console.log('Sending request with query:', query);
-            console.log('With variables:', variables);
+            setLoading(true);
+            setErrorMessage(null);
 
             const fetchData = async () => {
-                try {
                     const response = await fetch(`${BACKEND_URL}/graphql`, {
                         method: 'POST',
                         headers: {
@@ -42,17 +43,35 @@ function Registration() {
                             variables: variables 
                         })
                     });
-                    const result = await response.json();
-                    if (result.data && result.data.addUser) {
-                        console.log(result.data.addUser);
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-                console.log('fetchData() completed');
+                    return response;
             }
-            fetchData();
-            alert(`Successfully registered with email ${email}`);
+
+            try {
+                const response = await fetchData();
+                const result = await response.json();
+                
+                if (response.ok) {
+                    if (result.data && result.data.addUser && result.data.addUser.email) {
+                        navigate('/userlist');
+                    } else {
+                        console.error('Error fetching data:', result.errors);
+                        setErrorMessage('An unexpected error occurred. Please try again later.');
+                    }
+                } else {
+                    if (response.status === 401) {
+                        console.error('Error fetching data:', result.errors);
+                        setErrorMessage('Unauthorized: Invalid email or password.');
+                    } else {
+                        console.error('Error fetching data:', result.errors);
+                        setErrorMessage('An unexpected error occurred. Please try again later.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setErrorMessage('Error fetching data');
+            } finally {
+                setLoading(false);
+            }
         } else {
             alert('Missing form data');
         }
@@ -70,6 +89,7 @@ function Registration() {
                     <label htmlFor="password">Password</label>
                     <input ref={passwordInputRef} type="password" id="password" autoComplete="new-password" required />
                 </div>
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 <button type="submit">Register</button>
             </form>
         </div>
