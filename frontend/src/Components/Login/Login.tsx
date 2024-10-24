@@ -1,7 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { BACKEND_URL } from '../../connSettings';
 
-function Login(){
+function Login() {
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const emailInputRef = useRef<HTMLInputElement | null>(null);
     const passwordInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -25,46 +27,64 @@ function Login(){
                 password: password,
             };
 
+            setLoading(true);
+            setErrorMessage(null);
+
             console.log('Sending request with query:', query);
             console.log('With variables:', variables);
 
             const fetchData = async () => {
-                try {
-                    const response = await fetch(`${BACKEND_URL}/graphql`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            query: query,
-                            variables: variables 
-                        })
-                    });
-                    const result = await response.json();
+                const response = await fetch(`${BACKEND_URL}/graphql`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: variables
+                    })
+                });
+                return response;
+
+            }
+
+            try {
+                const response = await fetchData();
+                const result = await response.json();
+                console.log(response);
+                if (response.ok) {
                     if (result.data && result.data.verifyUser && result.data.verifyUser._id) {
-                        console.log(result.data.verifyUser._id);
                         localStorage.setItem('token', result.data.verifyUser.token);
                         localStorage.setItem('userId', result.data.verifyUser._id);
                         localStorage.setItem('email', result.data.verifyUser.email);
                     } else {
-                        console.error("Authentication failed:", result.errors);
+                        setErrorMessage('Invalid login');
+                        console.error("Authentication failed", result.errors);
                     }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                } else {
+                    if (response.status === 401) {
+                        setErrorMessage('Unauthorized: Invalid email or password.');
+                    } else {
+                        setErrorMessage('An unexpected error occurred. Please try again later.');
+                    }
                 }
+            } catch (error) {
+                setErrorMessage('Connection issue: Unable to reach the server. Please check your internet connection.');
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false); 
             }
-            fetchData();
         } else {
-            alert('Missing form data');
+            setErrorMessage('Please fill out both email and password.');
         }
     }
 
-    return(
+    return (
         <div>
             <h1>Access your documents</h1>
             <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} >
-            <div>
+                <div>
                     <label htmlFor="email">Email</label>
                     <input ref={emailInputRef} type="email" id="email" autoComplete="email" required />
                 </div>
@@ -72,7 +92,8 @@ function Login(){
                     <label htmlFor="password">Password</label>
                     <input ref={passwordInputRef} type="password" id="password" autoComplete="current-password" required />
                 </div>
-            <button>Login</button>
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                <button type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
             </form>
         </div>
     );
