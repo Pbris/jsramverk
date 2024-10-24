@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { BACKEND_URL } from '../connSettings';
+import { useNavigate } from 'react-router-dom';
 
 
 // Define an interface for your item structure
@@ -13,6 +14,7 @@ interface Item {
 function List(props: any) {
   // Explicitly type the state
   const [items, setItems] = useState<Item[]>([]);
+  const navigate = useNavigate();
   const effectRan = useRef(false);
 
   useEffect(() => {
@@ -47,8 +49,9 @@ function List(props: any) {
 
   function showSingleDocument(id: string)
   {
-    props.setDocId(id);
-    props.setView("SingleDocument");
+    navigate(`/documents/${id}`);
+    // props.setDocId(id);
+    // props.setView("SingleDocument");
   }
 
   return (

@@ -38,6 +38,7 @@ const docs = {
 
     updateOne: async function updateOne(id, body) {
         const { collection, client } = await database.getDb('jsramverk');
+        console.log(`id: ${id}`);
         try {
             return await collection.updateOne(
                 { _id: new ObjectId(id) },
