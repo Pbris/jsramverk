@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
 import { BACKEND_URL } from '../../connSettings';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const emailInputRef = useRef<HTMLInputElement | null>(null);
     const passwordInputRef = useRef<HTMLInputElement | null>(null);
+    const navigate = useNavigate();
 
     async function handleLogin() {
         if (emailInputRef.current && passwordInputRef.current) {
@@ -58,9 +60,10 @@ function Login() {
                         localStorage.setItem('token', result.data.verifyUser.token);
                         localStorage.setItem('userId', result.data.verifyUser._id);
                         localStorage.setItem('email', result.data.verifyUser.email);
+                        navigate('/documents');
                     } else {
                         setErrorMessage('Invalid login');
-                        console.error("Authentication failed", result.errors);
+                        console.error("Authentication failed", result.errors[0].message);
                     }
                 } else {
                     if (response.status === 401) {
