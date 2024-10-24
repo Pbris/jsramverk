@@ -55,7 +55,7 @@ function Registration() {
                         navigate('/userlist');
                     } else {
                         console.error('Error fetching data:', result.errors);
-                        setErrorMessage('An unexpected error occurred. Please try again later.');
+                        setErrorMessage(result.errors[0].message);
                     }
                 } else {
                     if (response.status === 401) {

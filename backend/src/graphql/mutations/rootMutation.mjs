@@ -29,7 +29,16 @@ const RootMutationType = new GraphQLObjectType({
                 role: { type: GraphQLString }
             },
             resolve: async function (parent, args) {
-                return users.addUser(args);
+                try {
+                    const newUser = await users.addUser(args);
+                    if (!newUser) {
+                        throw new Error("User registration failed.");
+                    }
+                    return newUser;
+                } catch (error) {
+                    console.error("Error in addUser mutation:", error.message);
+                    throw new Error("Cannot register user: " + error.message);
+                }
             }
         },
         verifyUser: {
@@ -66,7 +75,6 @@ const RootMutationType = new GraphQLObjectType({
                 return users.sendInvite(args.email, args.documentId);
             }
         }
-
     })
 });
 

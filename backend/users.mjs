@@ -31,17 +31,23 @@ const users = {
             const data = await this.getOneByUsername(body.email);
             console.log(data);
             if (data !== null) {
-                console.log("Cannot register user");
-                return { error: "Cannot register user" };
+                console.log("Cannot register user - email already exists");
+                throw new Error("User already exists");
             }
             const hashedPassword = await bcrypt.hash(body.password, 10);
-            return await collection.insertOne({
+            const result = await collection.insertOne({
                 email: body.email,
                 hashedPassword: hashedPassword,
                 role: body.role || "user"
             });
+            return {
+                _id: result.insertedId,
+                email: body.email,
+                role: body.role
+            }
         } catch (e) {
-            console.error(e);
+            console.error("Error adding user:", e);
+            throw new Error("Failed to register user"); 
         }
     },
 
