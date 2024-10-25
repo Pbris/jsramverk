@@ -46,15 +46,33 @@ export function CommentManager({ contentRef, handleChange }: CommentManagerProps
     });
   }
 
-  /** Delete a comment from document **/
-  function deleteComment(event: MouseEvent, span: HTMLElement) {
-    var text = document.createTextNode(span.innerHTML);
-    span.parentNode?.insertBefore(text, span);
-    span.remove();
+//   /** Delete a comment from document **/
+//   function deleteComment(event: MouseEvent, span: HTMLElement) {
+//     var text = document.createTextNode(span.innerHTML);
+//     span.parentNode?.insertBefore(text, span);
+//     console.log(span);
+//     // span.remove();
+//     span.parentNode?.removeChild(span);
+//     if (event.target instanceof HTMLElement) {
+//       event.target.remove();
+//     }
+
+//     handleChange({ currentTarget: contentRef.current } as React.FormEvent<HTMLDivElement>);
+//   }
+/** Delete a comment from document **/
+function deleteComment(event: MouseEvent, span: HTMLElement) {
+    const actualSpan = document.getElementById(span.id);
+    if (!actualSpan) {
+        return
+    };
+
+    let text = document.createTextNode(span.innerHTML);
+    actualSpan.parentNode?.insertBefore(text, actualSpan);
+    actualSpan.parentNode?.removeChild(actualSpan);
     if (event.target instanceof HTMLElement) {
       event.target.remove();
     }
-
+    
     handleChange({ currentTarget: contentRef.current } as React.FormEvent<HTMLDivElement>);
   }
 

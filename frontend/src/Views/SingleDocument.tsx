@@ -32,7 +32,6 @@ function SingleDocument() {
     if (effectRan.current === false) {
     const fetchData = async () => {
         try {
-          console.log(docID);
           const response = await fetch(`${BACKEND_URL}/graphql`, {
             method: 'POST',
             headers: {

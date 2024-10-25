@@ -72,7 +72,6 @@ export function DocumentEditor({
       preCaretRange.selectNodeContents(target);
       preCaretRange.setEnd(range.endContainer, range.endOffset);
       cursorRef.current = preCaretRange.toString().length;
-      console.log("Cursor position  :", cursorRef.current);
     }
   }
 
