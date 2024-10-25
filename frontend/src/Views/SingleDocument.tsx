@@ -240,7 +240,12 @@ useEffect(() => {
 
   /** Toggle between code and text mode **/
   function toggleCodeMode() {
+    if (!doc.isCode && !window.confirm("Warning: all comments will be permanently removed, do you want to proceed?")) {
+      return;
+    }
     const updatedDoc = { ...doc, isCode: !doc.isCode };
+    updatedDoc.content = updatedDoc.content.replace(/<\/?span[^>]*>/g, '');
+    // updatedDoc.content = updatedDoc.content.replace(/<\/span[^>]*>/, '');
     setDoc(updatedDoc);
     if (socket.current) {
       socket.current.emit("doc", updatedDoc);
