@@ -23,11 +23,11 @@ interface Document {
   }
 
 export function DocumentEditor({ 
-  doc, 
-  setDoc, 
-  socket, 
-  contentRef, 
-  cursorRef, 
+  doc,
+  setDoc,
+  socket,
+  contentRef,
+  cursorRef,
   cursorElement,
   executionResult,
   setExecutionResult
