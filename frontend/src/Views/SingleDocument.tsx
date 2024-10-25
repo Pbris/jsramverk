@@ -211,7 +211,7 @@ function SingleDocument() {
 
   /** Toggle between code and text mode **/
   function toggleCodeMode() {
-    if (!doc.isCode && !window.confirm("Warning: all comments will be removed, do you want to proceed?")) {
+    if (!doc.isCode && !window.confirm("Warning: all comments will be permanently removed, do you want to proceed?")) {
       return;
     }
     const updatedDoc = { ...doc, isCode: !doc.isCode };
