@@ -53,6 +53,16 @@ const docs = {
         } catch (e) {
             console.error(e);
         }
+    },
+
+    deleteOne: async function deleteOne(id) {
+        const { collection, client } = await database.getDb('jsramverk');
+        try {
+            return await collection.deleteOne({ _id: new ObjectId(id) });
+        } catch (e) {
+            console.error(e);
+            return { deletedCount: 0 };
+        }
     }
 };
 

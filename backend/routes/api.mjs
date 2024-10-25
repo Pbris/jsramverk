@@ -23,4 +23,9 @@ router.post("/update", async (req, res) => {
     return res.json(result);
 });
 
+router.delete("/:id", async (req, res) => {
+    const result = await documents.deleteOne(req.params.id);
+    return res.json(result);
+});
+
 export default router;
