@@ -4,7 +4,7 @@ import { BACKEND_URL } from '../connSettings';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import InviteEmailComponent from '../Components/InviteEmailComponent';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 interface Document {
   _id: string;
@@ -22,6 +22,8 @@ function SingleDocument() {
   const cursorRef = useRef<number | null>(null);
   const cursorElement = useRef<string>("title");
   const effectRan = useRef(false);
+  const [submit, setSubmit] = useState(false);
+  const navigate = useNavigate(); 
 
   /** Fetch document data  **/
   useEffect(() => {
@@ -79,6 +81,33 @@ function SingleDocument() {
   }, [docID]);
 
 
+// Delete a document
+useEffect(() => {
+  const deleteDocument = async () => {
+    if (submit) {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/${docID}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          setSubmit(false);
+          navigate('/documents'); 
+
+        } else {
+          console.error('Failed to delete document');
+        }
+      } catch (error) {
+        console.error('Error deleting document:', error);
+        setSubmit(false);
+      }
+    }
+  };
+  deleteDocument();
+}, [submit, doc]);
 
   /** Set cursor position in content area **/
   useEffect(() => {
@@ -295,6 +324,16 @@ function SingleDocument() {
           <h3>Show/delete comments</h3>
         </button>
       )}
+      <button 
+          onClick={() => {
+            if (window.confirm('Are you sure you want to delete this document?')) {
+              setSubmit(true);
+            }
+          }}
+          style={{ backgroundColor: '#ff4444' }}
+        >
+          <h3>Delete Document</h3>
+        </button>
       <div id="comments-list"></div>
       <style>{`
         #content-text span[id^="comment-"] {
