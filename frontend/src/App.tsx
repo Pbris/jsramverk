@@ -1,4 +1,4 @@
-import {useState} from 'react';
+// import {useState} from 'react';
 
 import List from './Views/List';
 import SingleDocument from './Views/SingleDocument';
@@ -15,8 +15,8 @@ import Home from './Components/Home';
 
 
 function App(): JSX.Element {
-  const [view, setView] = useState("List");
-  const [docId, setDocId] = useState("");
+  // const [view, setView] = useState("List");
+  // const [docId, setDocId] = useState("");
 
   // // Function to render the current component using a switch statement
   // function renderComponent() {
