@@ -1,4 +1,5 @@
 import { database } from './db/database.mjs';
+import docs from './docs.mjs';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -77,21 +78,9 @@ const users = {
 
     sendInvite: async function sendInvite(senderId, receipientEmail, documentId) {
 
-        const token = jwt.sign({ documentId: documentId, receipientEmail: receipientEmail }, "NOT YET A SECRET", {
-            expiresIn: "72h"
-        });
-
-        await invitesCollection.insertOne({
-            senderId: senderId,
-            receipientEmail: receipientEmail,
-            documentId: documentId,
-            token: token,
-            createdAt: new Date(),
-            expiresAt: new Date(Date.now() + 72 * 60 * 60 * 1000)
-        });
-
-        const link = `http://localhost:3000/edit/${documentId}?token=${token}`;
-        sendEmail(receipientEmail, link);
+        await docs.addEditor(documentId, receipientEmail);
+        this.sendEmail(receipientEmail, "hoja");
+        return "Editor added successfully!";
 
     },
 

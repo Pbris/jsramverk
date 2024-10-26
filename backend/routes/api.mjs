@@ -13,7 +13,8 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/add_new", async (req, res) => {
-    const result = await documents.addOne(req.body);
+    console.log(req.auth);
+    const result = await documents.addOne(req.body, req.auth._id);
     return res.json(result);
 });
 

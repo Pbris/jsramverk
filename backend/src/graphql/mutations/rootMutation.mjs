@@ -5,6 +5,7 @@ import {
 
 import UsersType from "../users.mjs";
 import users from "../../../users.mjs";
+import documents from "../../../docs.mjs";
 
 const LoginResponseType = new GraphQLObjectType({
     name: 'LoginResponse',
@@ -66,12 +67,14 @@ const RootMutationType = new GraphQLObjectType({
                 documentId: { type: GraphQLString }
             },
             resolve: async function (parent, args, context) {
-
-                if (document.ownerId !== context.user._id) {
-                    return { error: "Unauthorized" };
+                const document = await documents.getOne(args.documentId);
+                console.log(context.user._id);
+                if (document.owner !== context.user._id) {
+                    console.log("Will throw error");
+                    throw new Error("Unauthorized: Only the owner can invite editors");
                 }
 
-                return users.sendInvite(args.email, args.documentId);
+                return users.sendInvite(context.user._id, args.email, args.documentId);
             }
         }
     })

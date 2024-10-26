@@ -6,6 +6,7 @@ import http from 'http';
 import { connectToDatabase } from '../db/database.mjs';
 import { Server } from 'socket.io';
 import { expressjwt } from "express-jwt";
+import jwt from 'jsonwebtoken';
 dotenv.config();
 "use strict";
 
@@ -52,6 +53,22 @@ const io = new Server(httpServer, {
     }
 });
 
+io.use((socket, next) => {
+    
+    console.log("Socket handshake: " + socket.handshake.auth.token);
+    const token = socket.handshake.auth.token;
+    jwt.verify(token, "NOT YET A SECRET", (err, decoded) => {
+        if (err) {
+            console.log("Unauthorized");
+            return next(new Error("Unauthorized"));
+        }
+        console.log("Authorized");
+        socket.user = decoded;
+        console.log("id:" + socket.user._id);
+        return next();
+    });
+});
+
 let timeout;
 
 // Server
@@ -66,6 +83,13 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('doc', async (data) => {
         console.log(`Received update for document ${data._id}:`, data);
+
+        const doc = await documents.getOne(data._id);
+
+        if (doc.owner !== socket.user._id && !doc.editors.includes(socket.user.email)) {
+            console.log('Unauthorized');
+            return next(new Error("Unauthorized"));
+        }
 
         io.to(data._id).emit('doc', data);
 
@@ -113,7 +137,13 @@ app.get("/", (req, res) => {
 });
 
 // Mount API routes under /api
-app.use('/api', apiRoutes);
+app.use('/api', 
+    expressjwt({
+        secret: "NOT YET A SECRET",
+        algorithms: ['HS256'],
+        credentialsRequired: false,
+    }),
+    apiRoutes);
 
 // Export the app for testing purposes
 export { app };

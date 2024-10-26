@@ -13,7 +13,9 @@ const DocumentsType = new GraphQLObjectType({
         _id: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
         content: { type: new GraphQLNonNull(GraphQLString) },
-        isCode: { type: GraphQLBoolean }
+        isCode: { type: GraphQLBoolean },
+        owner: { type: new GraphQLNonNull(GraphQLString) },
+        editors: { type: GraphQLString }
     })
 })
 

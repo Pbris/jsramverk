@@ -12,10 +12,12 @@ function AddNew() {
     useEffect(() => {
         const submitForm = async () => {
         if (submit) {
+            const token = localStorage.getItem('token');
             await fetch(`${BACKEND_URL}/api/add_new`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        ...(token && { 'Authorization': `Bearer ${token}` }),
                     },
                     body: JSON.stringify({ title, content }),
                 });

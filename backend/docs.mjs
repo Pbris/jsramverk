@@ -23,13 +23,14 @@ const docs = {
         }
     },
 
-    addOne: async function addOne(body) {
+    addOne: async function addOne(body, ownerId) {
         const { collection, client } = await database.getDb('jsramverk');
         try {
             return await collection.insertOne({
                 title: body.title,
                 content: body.content,
                 isCode: body.isCode || false,
+                owner: ownerId,
             });
         } catch (e) {
             console.error(e);
@@ -38,17 +39,32 @@ const docs = {
 
     updateOne: async function updateOne(id, body) {
         const { collection, client } = await database.getDb('jsramverk');
-        console.log(`id: ${id}`);
+
         try {
             return await collection.updateOne(
                 { _id: new ObjectId(id) },
-                { 
+                {
                     $set: {
                         title: body.title,
                         content: body.content,
-                        isCode: body.isCode
-                    } 
+                        isCode: body.isCode,
+                    }
                 }
+            );
+        } catch (e) {
+            console.error(e);
+        }
+    },
+
+    addEditor: async function addEditor(id, email) {
+        const { collection, client } = await database.getDb('jsramverk');
+        try {
+            return await collection.updateOne(
+                { _id: new ObjectId(id) },
+                {
+                    $addToSet: { editors: email },
+                },
+                { upsert: false }
             );
         } catch (e) {
             console.error(e);
