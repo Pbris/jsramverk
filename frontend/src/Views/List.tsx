@@ -35,6 +35,9 @@ function List(props: any) {
           if (result.data && result.data.documents) {
             setItems(result.data.documents);
           }
+          if (result.errors[0].message === "Unauthorized") {
+            navigate('/login');
+          }
         } catch (error) {
           console.error('Error fetching data:', error);
         }
