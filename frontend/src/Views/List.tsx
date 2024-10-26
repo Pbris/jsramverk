@@ -21,12 +21,13 @@ function List(props: any) {
     if (effectRan.current === false) {
       const fetchData = async () => {
         try {
+          const token = localStorage.getItem('token');
           const response = await fetch(`${BACKEND_URL}/graphql`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              ...(token && { 'Authorization': `Bearer ${token}` }),
             },
             body: JSON.stringify({ query: "{ documents { _id title content isCode } }" })
           });
