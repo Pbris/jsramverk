@@ -25,6 +25,10 @@ const docs = {
 
     addOne: async function addOne(body, ownerId) {
         const { collection, client } = await database.getDb('jsramverk');
+        if (!ownerId) {
+            throw new Error('OwnerId is required to create a document');
+        }
+
         try {
             return await collection.insertOne({
                 title: body.title,

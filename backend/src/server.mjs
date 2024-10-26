@@ -55,17 +55,13 @@ const io = new Server(httpServer, {
 });
 
 io.use((socket, next) => {
-    
-    console.log("Socket handshake: " + socket.handshake.auth.token);
+
     const token = socket.handshake.auth.token;
     jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-            console.log("Unauthorized");
             return next(new Error("Unauthorized"));
         }
-        console.log("Authorized");
         socket.user = decoded;
-        console.log("id:" + socket.user._id);
         return next();
     });
 });
@@ -74,11 +70,9 @@ let timeout;
 
 // Server
 io.sockets.on('connection', function (socket) {
-    console.log(socket.id);
 
     socket.on('create', (room) => {
-        console.log(`Socket ${socket.id} joining room ${room}`);
-
+        // console.log(`Socket ${socket.id} joining room ${room}`);
         socket.join(room);
     });
 
@@ -88,7 +82,6 @@ io.sockets.on('connection', function (socket) {
         const doc = await documents.getOne(data._id);
 
         if (doc.owner !== socket.user._id && !doc.editors.includes(socket.user.email)) {
-            console.log('Unauthorized');
             return next(new Error("Unauthorized"));
         }
 
@@ -138,7 +131,7 @@ app.get("/", (req, res) => {
 });
 
 // Mount API routes under /api
-app.use('/api', 
+app.use('/api',
     expressjwt({
         secret: secret,
         algorithms: ['HS256'],
@@ -156,28 +149,4 @@ if (process.env.NODE_ENV !== 'test') {
     });
 } else {
     console.log("Server is not running, it is started in test mode");
-}
-
-
-/**
- * Find documents in an collection by matching search criteria.
- *
- * @async
- *
- * @param {object} criteria   Search criteria.
- * @param {object} projection What to project in results.
- * @param {number} limit      Limit the number of documents to retrieve.
- *
- * @throws Error when database operation fails.
- *
- * @return {Promise<array>} The resultset as an array.
- */
-async function findInCollection(criteria, projection, limit) {
-    const db = await database.getDb();
-    const col = await db.collection;
-    const res = await col.find(criteria, projection).limit(limit).toArray();
-
-    await db.client.close();
-
-    return res;
 }

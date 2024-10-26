@@ -10,7 +10,7 @@ describe('Docs Tests', function() {
     });
     describe('addOne()', function() {
         it('should add a document', async function() {
-            const result = await docs.addOne({ title: 'Test', content: 'Test' });
+            const result = await docs.addOne({ title: 'Test', content: 'Test' }, 'test');
             expect(result).to.be.an('object');
         });
     });
