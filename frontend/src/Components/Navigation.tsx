@@ -1,7 +1,7 @@
 function Navigation() {
     return (
-        <nav>
-            <ul>
+        <nav className="">
+            <ul className="flex">
                 <li><a href="/">Home</a></li>
                 <li><a href="/documents">Documents</a></li>
                 <li><a href="/addnew">Add New</a></li>
