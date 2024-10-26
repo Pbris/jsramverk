@@ -12,6 +12,7 @@ import NotFound from './Components/NotFound';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './Components/Navigation';
 import Home from './Components/Home';
+import { AuthProvider } from './Contexts/AuthContext';
 
 
 function App(): JSX.Element {
@@ -46,23 +47,25 @@ function App(): JSX.Element {
   // }
 
   return (
-    <Router>
-    <div>
-      <Header />
-      <Navigation />
-      <Routes>
-        <Route path="/" element={<Home />} />          {/* Route for the Login page */}
-        <Route path="/documents" element={<List />} /> {/* Route for the documents page */}
-        <Route path="/documents/:docID" element={<SingleDocument />} /> {/* Route for the DocumentDetails page */} 
-        <Route path="/addnew" element={<AddNew />} />   {/* Route for the AddNew page */}
-        <Route path="/register" element={<Registration />} /> {/* Route for the Registration page */}
-        <Route path="/login" element={<Login />} />     {/* Route for the Login page */}
-        <Route path="*" element={<NotFound />} />       {/* Catch-all route for 404 Not Found */}
-        <Route path="/userlist" element={<UserList />} /> {/* Route for the UserList page */}
-      </Routes>
-      <Footer />
-    </div>
-  </Router>
+    <AuthProvider>
+      <Router>
+        <div>
+          <Header />
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Home />} />          {/* Route for the Login page */}
+            <Route path="/documents" element={<List />} /> {/* Route for the documents page */}
+            <Route path="/documents/:docID" element={<SingleDocument />} /> {/* Route for the DocumentDetails page */}
+            <Route path="/addnew" element={<AddNew />} />   {/* Route for the AddNew page */}
+            <Route path="/register" element={<Registration />} /> {/* Route for the Registration page */}
+            <Route path="/login" element={<Login />} />     {/* Route for the Login page */}
+            <Route path="*" element={<NotFound />} />       {/* Catch-all route for 404 Not Found */}
+            <Route path="/userlist" element={<UserList />} /> {/* Route for the UserList page */}
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
     // <>
     //   <Header/>
     //   <div className='navbar'>
