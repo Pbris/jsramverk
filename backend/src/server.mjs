@@ -40,6 +40,7 @@ app.use(express.json());
 
 
 const httpServer = http.createServer(app);
+const secret = process.env.TOKEN_SECRET || "NOT YET A SECRET";
 
 const io = new Server(httpServer, {
     cors: {
@@ -57,7 +58,7 @@ io.use((socket, next) => {
     
     console.log("Socket handshake: " + socket.handshake.auth.token);
     const token = socket.handshake.auth.token;
-    jwt.verify(token, "NOT YET A SECRET", (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
         if (err) {
             console.log("Unauthorized");
             return next(new Error("Unauthorized"));
@@ -120,7 +121,7 @@ const schema = new GraphQLSchema({
 app.use(
     '/graphql',
     expressjwt({
-        secret: "NOT YET A SECRET",
+        secret: secret,
         algorithms: ['HS256'],
         credentialsRequired: false,
     }),
@@ -139,7 +140,7 @@ app.get("/", (req, res) => {
 // Mount API routes under /api
 app.use('/api', 
     expressjwt({
-        secret: "NOT YET A SECRET",
+        secret: secret,
         algorithms: ['HS256'],
         credentialsRequired: false,
     }),

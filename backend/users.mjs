@@ -3,6 +3,8 @@ import docs from './docs.mjs';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const secret = process.env.TOKEN_SECRET || "NOT YET A SECRET";
+
 const users = {
 
     getAll: async function getAll() {
@@ -61,7 +63,7 @@ const users = {
             console.log("User is verified");
             console.log({ _id: user._id, email: email, role: user?.role ? user.role : "user" });
             // Create a token
-            const token = jwt.sign({ _id: user._id, email: email, role: user.role ? user.role : "user" }, "NOT YET A SECRET", {
+            const token = jwt.sign({ _id: user._id, email: email, role: user.role ? user.role : "user" }, secret, {
                 expiresIn: "1h"
             });
             console.log(token);
