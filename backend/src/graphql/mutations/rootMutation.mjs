@@ -12,7 +12,8 @@ const LoginResponseType = new GraphQLObjectType({
     fields: {
         token: { type: GraphQLString }, // Return the token here
         _id: { type: GraphQLString },   // Optional: Return user _id
-        email: { type: GraphQLString }  // Optional: Return user email
+        email: { type: GraphQLString },  // Optional: Return user email
+        role: { type: GraphQLString }   // Optional: Return user role
     }
 });
 
@@ -52,9 +53,7 @@ const RootMutationType = new GraphQLObjectType({
                 const user = await users.verifyUser(args.email, args.password);
 
                 if (!user.token) {
-                    return { error: "Invalid credentials" };
-                    // not sure how to manage errors here...
-                    //throw new Error("Invalid credentials");
+                    throw new Error("Unauthorized");
                 }
                 return user;
             }
