@@ -21,7 +21,6 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLString }
             },
             resolve: async function (parent, args, context) {
-                console.log(context.user._id);
                 if (!context.user) {
                     console.log('Unauthorized 1');
                     throw new Error('Unauthorized');
