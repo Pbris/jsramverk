@@ -6,6 +6,7 @@ import http from 'http';
 import { connectToDatabase } from '../db/database.mjs';
 import { Server } from 'socket.io';
 import { expressjwt } from "express-jwt";
+import jwt from 'jsonwebtoken';
 dotenv.config();
 "use strict";
 
@@ -39,6 +40,7 @@ app.use(express.json());
 
 
 const httpServer = http.createServer(app);
+const secret = process.env.TOKEN_SECRET || "NOT YET A SECRET";
 
 const io = new Server(httpServer, {
     cors: {
@@ -52,20 +54,36 @@ const io = new Server(httpServer, {
     }
 });
 
+io.use((socket, next) => {
+
+    const token = socket.handshake.auth.token;
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            return next(new Error("Unauthorized"));
+        }
+        socket.user = decoded;
+        return next();
+    });
+});
+
 let timeout;
 
 // Server
 io.sockets.on('connection', function (socket) {
-    console.log(socket.id);
 
     socket.on('create', (room) => {
-        console.log(`Socket ${socket.id} joining room ${room}`);
-
+        // console.log(`Socket ${socket.id} joining room ${room}`);
         socket.join(room);
     });
 
     socket.on('doc', async (data) => {
         console.log(`Received update for document ${data._id}:`, data);
+
+        const doc = await documents.getOne(data._id);
+
+        if (doc.owner !== socket.user._id && !doc.editors.includes(socket.user.email)) {
+            return next(new Error("Unauthorized"));
+        }
 
         io.to(data._id).emit('doc', data);
 
@@ -96,7 +114,7 @@ const schema = new GraphQLSchema({
 app.use(
     '/graphql',
     expressjwt({
-        secret: "NOT YET A SECRET",
+        secret: secret,
         algorithms: ['HS256'],
         credentialsRequired: false,
     }),
@@ -113,7 +131,13 @@ app.get("/", (req, res) => {
 });
 
 // Mount API routes under /api
-app.use('/api', apiRoutes);
+app.use('/api',
+    expressjwt({
+        secret: secret,
+        algorithms: ['HS256'],
+        credentialsRequired: false,
+    }),
+    apiRoutes);
 
 // Export the app for testing purposes
 export { app };
@@ -125,28 +149,4 @@ if (process.env.NODE_ENV !== 'test') {
     });
 } else {
     console.log("Server is not running, it is started in test mode");
-}
-
-
-/**
- * Find documents in an collection by matching search criteria.
- *
- * @async
- *
- * @param {object} criteria   Search criteria.
- * @param {object} projection What to project in results.
- * @param {number} limit      Limit the number of documents to retrieve.
- *
- * @throws Error when database operation fails.
- *
- * @return {Promise<array>} The resultset as an array.
- */
-async function findInCollection(criteria, projection, limit) {
-    const db = await database.getDb();
-    const col = await db.collection;
-    const res = await col.find(criteria, projection).limit(limit).toArray();
-
-    await db.client.close();
-
-    return res;
 }

@@ -1,8 +1,17 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { BACKEND_URL } from '../../connSettings';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../Contexts/AuthContext';
 
 function Login() {
+    const authContext = useContext(AuthContext);
+
+    if (!authContext) {
+        throw new Error('You probably forgot to put <AuthProvider> in your component tree.');
+    }
+
+    const { login } = authContext; 
+    
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const emailInputRef = useRef<HTMLInputElement | null>(null);
@@ -20,6 +29,7 @@ function Login() {
                     token
                     _id
                     email
+                    role
                 }
             }
              `;
@@ -54,16 +64,14 @@ function Login() {
             try {
                 const response = await fetchData();
                 const result = await response.json();
-                
+                console.log(response)
                 if (response.ok) {
                     if (result.data && result.data.verifyUser && result.data.verifyUser._id) {
-                        localStorage.setItem('token', result.data.verifyUser.token);
-                        localStorage.setItem('userId', result.data.verifyUser._id);
-                        localStorage.setItem('email', result.data.verifyUser.email);
+                        login(result.data.verifyUser.token, result.data.verifyUser._id, result.data.verifyUser.email, result.data.verifyUser.role);
                         navigate('/documents');
                     } else {
                         setErrorMessage('Invalid login');
-                        console.error("Authentication failed", result.errors[0].message);
+                        console.error("Authentication failed", result);
                     }
                 } else {
                     if (response.status === 401) {

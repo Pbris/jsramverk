@@ -20,28 +20,35 @@ const RootQueryType = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLString }
             },
-            resolve: async function(parent, args, context) {
+            resolve: async function (parent, args, context) {
+                if (!context.user) {
+                    console.log('Unauthorized 1');
+                    throw new Error('Unauthorized');
+                }
                 const doc = await docs.getOne(args.id);
-
-                // if (context.user && doc.owner === context.user.email) {
-                //     return docs.getOne(args.id);
-                // }
-
-
-                // return { error: "Invalid credentials" };
-
+                if (
+                    doc.owner !== context.user._id && 
+                    !(Array.isArray(doc.editors) && doc.editors.includes(context.user.email))
+                ) {
+                    console.log('Unauthorized 2');
+                    throw new Error('Unauthorized');
+                }
                 return docs.getOne(args.id);
             }
         },
         documents: {
             type: new GraphQLList(DocumentsType),
             description: 'All documents',
-            resolve: async function(parent, args, context) {
-                console.log("Happy happy? Yes?");
-                const user = context.user; // Retrieved from the JWT
-                console.log("Happy happy?: \n" + JSON.stringify(user, null, 2));
-                console.log(user.email);
-                return docs.getAll();
+            resolve: async function (parent, args, context) {
+                if (!context.user) {
+                    throw new Error('Unauthorized');
+                }
+                const documents = await docs.getAll();
+                const filtered = documents.filter(
+                    doc => doc.owner === context.user._id ||
+                    (Array.isArray(doc.editors) && doc.editors.includes(context.user.email))
+                );
+                return filtered;
             }
         },
         user: {
@@ -50,14 +57,14 @@ const RootQueryType = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLString }
             },
-            resolve: async function(parent, args) {
+            resolve: async function (parent, args) {
                 return users.getOneByUsername(args.email);
             }
         },
         users: {
             type: new GraphQLList(UsersType),
             description: 'All users',
-            resolve: async function() {
+            resolve: async function () {
                 return users.getAll();
             }
         }

@@ -34,6 +34,9 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding:1rem;
 }
 
 h1 {
@@ -43,6 +46,13 @@ h1 {
 h2 {
     font-size: 1.6rem;
     margin-bottom: 1.4rem;
+}
+
+.flex {
+    display: flex;
+    gap: 1.4rem;
+    list-style-type: none;
+    flex-wrap: wrap;
 }
 
 p {

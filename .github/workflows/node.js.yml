@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main", "user-login" ]
+    branches: [ "main", "user-login", "add-full-access-control" ]
     # paths:
     #   - 'backend/**'
   pull_request:

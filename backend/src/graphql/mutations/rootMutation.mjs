@@ -5,6 +5,7 @@ import {
 
 import UsersType from "../users.mjs";
 import users from "../../../users.mjs";
+import documents from "../../../docs.mjs";
 
 const LoginResponseType = new GraphQLObjectType({
     name: 'LoginResponse',
@@ -12,7 +13,8 @@ const LoginResponseType = new GraphQLObjectType({
     fields: {
         token: { type: GraphQLString }, // Return the token here
         _id: { type: GraphQLString },   // Optional: Return user _id
-        email: { type: GraphQLString }  // Optional: Return user email
+        email: { type: GraphQLString },  // Optional: Return user email
+        role: { type: GraphQLString }   // Optional: Return user role
     }
 });
 
@@ -52,9 +54,7 @@ const RootMutationType = new GraphQLObjectType({
                 const user = await users.verifyUser(args.email, args.password);
 
                 if (!user.token) {
-                    return { error: "Invalid credentials" };
-                    // not sure how to manage errors here...
-                    //throw new Error("Invalid credentials");
+                    throw new Error("Unauthorized");
                 }
                 return user;
             }
@@ -67,12 +67,14 @@ const RootMutationType = new GraphQLObjectType({
                 documentId: { type: GraphQLString }
             },
             resolve: async function (parent, args, context) {
-
-                if (document.ownerId !== context.user._id) {
-                    return { error: "Unauthorized" };
+                const document = await documents.getOne(args.documentId);
+                console.log(context.user._id);
+                if (document.owner !== context.user._id) {
+                    console.log("Will throw error");
+                    throw new Error("Unauthorized: Only the owner can invite editors");
                 }
 
-                return users.sendInvite(args.email, args.documentId);
+                return users.sendInvite(context.user._id, args.email, args.documentId);
             }
         }
     })
