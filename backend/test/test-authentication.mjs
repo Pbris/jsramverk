@@ -1,18 +1,8 @@
 import { use, expect } from 'chai';
 import chaiHttp from 'chai-http';
 import { app } from '../src/server.mjs';
-import jwt from 'jsonwebtoken';
-import documents from '../docs.mjs';
 
 const chai = use(chaiHttp);
-const secret = process.env.TOKEN_SECRET || "NOT YET A SECRET";
-
-let documentId;
-
-before(async function() {
-    const result = await documents.addOne({ title: 'Test Document', content: 'Test Content', isCode: false }, 'someOwnerId');
-    documentId = result.insertedId;
-});
 
 describe('Authentication', function() {
 
