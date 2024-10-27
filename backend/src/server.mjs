@@ -27,6 +27,7 @@ import apiRoutes from '../routes/api.mjs';
 import documents from "../docs.mjs";
 import express from 'express';
 import cors from 'cors';
+import { ObjectId } from 'mongodb'; 
 
 let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@jsramverk.9wov7.mongodb.net/?retryWrites=true&w=majority&appName=jsramverk`;
 
@@ -77,12 +78,13 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('doc', async (data) => {
-        console.log(`Received update for document ${data._id}:`, data);
-
+        if (!ObjectId.isValid(data._id)) {
+            return socket.emit("error", { message: "Invalid document ID" });
+        }
         const doc = await documents.getOne(data._id);
 
-        if (doc.owner !== socket.user._id && !doc.editors.includes(socket.user.email)) {
-            return next(new Error("Unauthorized"));
+        if (doc.owner !== socket.user._id && (!Array.isArray(doc.editors) || !doc.editors.includes(socket.user.email))) {
+            return socket.emit("error", { message: "Unauthorized" });
         }
 
         io.to(data._id).emit('doc', data);
