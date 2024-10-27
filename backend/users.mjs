@@ -2,6 +2,7 @@ import { database } from './db/database.mjs';
 import docs from './docs.mjs';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import sgMail from '@sendgrid/mail';
 
 const secret = process.env.TOKEN_SECRET || "NOT YET A SECRET";
 
@@ -81,13 +82,32 @@ const users = {
     sendInvite: async function sendInvite(senderId, receipientEmail, documentId) {
 
         await docs.addEditor(documentId, receipientEmail);
-        this.sendEmail(receipientEmail, "hoja");
+        this.sendEmail(receipientEmail, documentId);
         return "Editor added successfully!";
 
     },
 
     sendEmail: async function sendEmail(to, link) {
-        console.log(`Not really sending email to ${to} with link: ${link}`);
+        const msg = {
+            to: to,
+            from: 'karl@wackerberg.se', // Use the email address or domain you verified above
+            subject: 'Sending with Twilio SendGrid is Fun : Welcome to edit a document',
+            text: 'You have been invited to edit a document. You must register to edit the document.',
+            html: `Karl: <a href="https://www.student.bth.se/~KAAA19/editor/documents/${link}">Edit document</a><br>Owais: <a href="https://www.student.bth.se/~owsu23/editor/documents/${link}">Edit document</a><br>Peter:<a href="https://www.student.bth.se/~pela23/editor/documents/${link}">Edit document</a>`,
+        };
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        (async () => {
+            try {
+                await sgMail.send(msg);
+            } catch (error) {
+                console.error(error);
+
+                if (error.response) {
+                    console.error(error.response.body)
+                }
+            }
+        })();
+
     }
 
 };
