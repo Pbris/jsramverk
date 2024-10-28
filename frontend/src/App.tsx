@@ -47,21 +47,26 @@ function App(): JSX.Element {
   // }
 
   return (
+    
     <AuthProvider>
-      <Router>
+      <Router basename="/~owsu23/editor">
         <div>
           <Header />
           <Navigation />
           <Routes>
-            <Route path="/" element={<Home />} />          {/* Route for the Login page */}
-            <Route path="/documents" element={<List />} /> {/* Route for the documents page */}
-            <Route path="/documents/:docID" element={<SingleDocument />} /> {/* Route for the DocumentDetails page */}
-            <Route path="/addnew" element={<AddNew />} />   {/* Route for the AddNew page */}
-            <Route path="/register" element={<Registration />} /> {/* Route for the Registration page */}
-            <Route path="/login" element={<Login />} />     {/* Route for the Login page */}
-            <Route path="*" element={<NotFound />} />       {/* Catch-all route for 404 Not Found */}
-            <Route path="/userlist" element={<UserList />} /> {/* Route for the UserList page */}
-          </Routes>
+        <Route>
+          <Route index element={<Home />} />          
+          <Route path="documents">
+            <Route index element={<List />} />
+            <Route path=":docID" element={<SingleDocument />} />
+          </Route>
+          <Route path="addnew" element={<AddNew />} />
+          <Route path="register" element={<Registration />} />
+          <Route path="login" element={<Login />} />
+          <Route path="userlist" element={<UserList />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
           <Footer />
         </div>
       </Router>
