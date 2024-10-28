@@ -14,7 +14,7 @@ const Navigation: React.FC = () => {
     
     const handleLogout = () => {
         logout();
-        navigate('login');  // Changed to relative path
+        navigate('login');
     };
     
     return (

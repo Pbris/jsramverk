@@ -49,7 +49,7 @@ function App(): JSX.Element {
   return (
     
     <AuthProvider>
-      <Router basename="/~owsu23/editor">
+      <Router basename={process.env.REACT_APP_BASE_NAME}>
         <div>
           <Header />
           <Navigation />
