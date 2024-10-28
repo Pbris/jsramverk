@@ -1,38 +1,39 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../Contexts/AuthContext';
 
 const Navigation: React.FC = () => {
     const navigate = useNavigate();
     const authContext = useContext(AuthContext);
-
+    
     if(!authContext) {
         throw new Error('You probably forgot to put <AuthProvider> in your component tree.');
     }
-
-    const { isLoggedIn, logout } = authContext; 
-
+    
+    const { isLoggedIn, logout } = authContext;
+    
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        navigate('login');
     };
-
+    
     return (
         <nav className="">
             <ul className="flex">
-                <li><a href="/">Home</a></li>
-                <li><a href="/documents">Documents</a></li>
-                <li><a href="/addnew">Add New</a></li>
-                <li><a href="/register">Register</a></li>
+                <li><Link to="">Home</Link></li>
+                <li><Link to="documents">Documents</Link></li>
+                <li><Link to="addnew">Add New</Link></li>
                 {!isLoggedIn ? (
                     <>
-                        <li><a href="/register">Register</a></li>
-                        <li><a href="/login">Login</a></li>
+                        <li><Link to="register">Register</Link></li>
+                        <li><Link to="login">Login</Link></li>
                     </>
                 ) : (
-                    <li><a href="/" onClick={handleLogout}>Logout</a></li>
+                    <li>
+                        <Link to="" onClick={handleLogout}>Logout</Link>
+                    </li>
                 )}
-                <li><a href="/userlist">UserList</a></li>
+                <li><Link to="userlist">UserList</Link></li>
             </ul>
         </nav>
     );
