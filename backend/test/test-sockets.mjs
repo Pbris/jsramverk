@@ -1,62 +1,74 @@
-import { use, expect } from 'chai';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
+import { expect } from 'chai';
 import { io as Client } from 'socket.io-client';
 import jwt from 'jsonwebtoken';
+import { httpServer } from '../src/server.mjs';
+import documents from '../docs.mjs';
 
-describe('Socket Tests', () => {
-    let io, clientSocket;
-    const secret = "test-secret";
+describe('Document Editor Socket Tests', () => {
+    let clientSocket;
+    const secret = process.env.TOKEN_SECRET || "NOT YET A SECRET";
+    let testDocId;
+    const PORT = 3030;
 
-    before((done) => {
-        // Create mini-server
-        const httpServer = createServer();
-        io = new Server(httpServer);
-        
-        // Setup authentication
-        io.use((socket, next) => {
-            const token = socket.handshake.auth.token;
-            jwt.verify(token, secret, (err, decoded) => {
-                if (err) return next(new Error("Unauthorized"));
-                socket.user = decoded;
-                next();
+    before(async () => {
+        // Start the server
+        await new Promise(resolve => {
+            httpServer.listen(PORT, () => {
+                console.log(`Test server running on port ${PORT}`);
+                resolve();
             });
         });
 
-        // Handle messages
-        io.on("connection", (socket) => {
-            socket.on("hello", (msg) => {
-                socket.emit("reply", "got your message: " + msg);
-            });
+        // Create a test document in the database
+        const result = await documents.addOne({
+            title: 'Test Doc',
+            content: 'Initial content',
+            owner: 'kajsaAnka'
+        }, 'kajsaAnka');
+        testDocId = result.insertedId;
+
+        // Create test user token
+        const token = jwt.sign({ 
+            _id: 'kajsaAnka', 
+            email: 'ankan@test.com' 
+        }, secret);
+
+        // Connect to our test server
+        clientSocket = Client(`http://localhost:${PORT}`, {
+            auth: { token }
         });
 
-        // Start server and connect client
-        httpServer.listen(() => {
-            const token = jwt.sign({ _id: "test" }, secret);
-            clientSocket = Client(`http://localhost:${httpServer.address().port}`, {
-                auth: { token }
-            });
-            clientSocket.on("connect", done);
-        });
+        // Wait for connection
+        await new Promise(resolve => clientSocket.on('connect', resolve));
     });
 
-    // Clean up after tests
-    after(() => {
-        io.close();
+    after(async () => {
         clientSocket.close();
+        // Clean up test document
+        await documents.deleteOne(testDocId);
+        // Close the server
+        await new Promise(resolve => httpServer.close(resolve));
     });
 
-    it('should connect successfully', (done) => {
-        expect(clientSocket.connected).to.be.true;
-        done();
-    });
+    it('should join a document room and receive updates', (done) => {
+        // Join document room
+        clientSocket.emit('create', testDocId);
 
-    it('should send and receive messages', (done) => {
-        clientSocket.emit("hello", "test message");
-        
-        clientSocket.on("reply", (msg) => {
-            expect(msg).to.equal("got your message: test message");
+        // Send document update
+        const updatedDoc = {
+            _id: testDocId,
+            title: 'Updated Title',
+            content: 'Updated content'
+        };
+
+        // Listen for document updates
+        clientSocket.on('doc', (data) => {
+            expect(data.title).to.equal('Updated Title');
+            expect(data.content).to.equal('Updated content');
             done();
         });
+
+        // Emit document update
+        clientSocket.emit('doc', updatedDoc);
     });
 });

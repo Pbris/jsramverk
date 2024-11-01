@@ -152,3 +152,5 @@ if (process.env.NODE_ENV !== 'test') {
 } else {
     console.log("Server is not running, it is started in test mode");
 }
+
+export { httpServer };
