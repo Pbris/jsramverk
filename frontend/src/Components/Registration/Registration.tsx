@@ -90,7 +90,7 @@ function Registration() {
                     <input ref={passwordInputRef} type="password" id="password" autoComplete="new-password" required />
                 </div>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                <button type="submit">Register</button>
+                <button type="submit" disabled={loading}>{loading ? 'Registering...' : 'Register'}</button>
             </form>
         </div>
     );
