@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# Set base directory if needed
+# Uncomment and set if deployed in a subdirectory
+RewriteBase /~pela23/editor/
+
+# Serve files and directories directly if they exist
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirect all other requests to index.html (for React Router)
+RewriteRule ^ index.html [L]
+
+# Prevent directory listing
+Options -Indexes -MultiViews

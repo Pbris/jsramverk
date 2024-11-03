@@ -16,35 +16,6 @@ import { AuthProvider } from './Contexts/AuthContext';
 
 
 function App(): JSX.Element {
-  // const [view, setView] = useState("List");
-  // const [docId, setDocId] = useState("");
-
-  // // Function to render the current component using a switch statement
-  // function renderComponent() {
-  //   switch (view) {
-  //     case "List":
-  //       return <List setView={setView} setDocId={setDocId}/>;
-  //     case "AddNew":
-  //       return <AddNew setView={setView}/>;
-  //     case "Home":
-  //         return <div>Hej och välkommen {localStorage.getItem("email") ? localStorage.getItem("email") : "du okände!" }</div>;
-  //     case "SingleDocument":
-  //       return <SingleDocument id={docId} />;
-  //     case "Register":
-  //       return <Registration />;
-  //     case "Login":
-  //       localStorage.removeItem('token');
-  //       return <Login />;
-  //     case "UserList":
-  //       return <UserList />;
-  //     default:
-  //       return <div></div>;
-  //   }
-  // }
-
-  // function changeView(newView: string) {
-  //   setView(newView);
-  // }
 
   return (
     
@@ -71,19 +42,6 @@ function App(): JSX.Element {
         </div>
       </Router>
     </AuthProvider>
-    // <>
-    //   <Header/>
-    //   <div className='navbar'>
-    //   <button onClick={() => changeView("Home")}>Home</button>
-    //   <button onClick={() => changeView("List")}>List</button>
-    //   <button onClick={() => changeView("AddNew")}>AddNew</button>
-    //   <button onClick={() => changeView("Register")}>Register</button>
-    //   <button onClick={() => changeView("Login")}>{localStorage.getItem('token') ? 'Logout' : 'Login'} </button>
-    //   <button onClick={() => changeView("UserList")}>UserList</button>
-    //   </div>
-    //   {renderComponent()}
-    //   <Footer/>
-    // </>
   );
 }
 

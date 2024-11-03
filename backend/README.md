@@ -1,3 +1,3 @@
-# SSR Editor
+# Backend
 
-Starter project for DV1677 JSRamverk
+Project for DV1677 JSRamverk

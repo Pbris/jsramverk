@@ -2,24 +2,24 @@
 Course repo DV1677 BTH
 ====================
 ## Installera och köra
-För att installera och köra projektet, när det är nedladdat kör följande kommandon:
+För att installera och köra projektet, när det är nedladdat, kör följande kommandon:
 
 Backend:
 ```
-cd ssr-editor-0.1
+cd backend
 npm install
-nodemon run ssr-editor-0.1/src/server.mjs
+nodemon run backend/src/server.mjs
 ```
 
 Frontend:
 ```
 cd frontend
 npm install
-nodemon start
+npm start
 ```
 
 
-## Kmom01
+## Specifikation
 
 För att få koden att fungera så gjorde vi tre saker:
 1. Installerade en dotenv via: npm install dotenv
@@ -30,7 +30,7 @@ För att få koden att fungera så gjorde vi tre saker:
 
 Vårt val av frontend-ramverk föll på React, med TypeScript. Efter lite efterforskningar uppfattar vi detta som attraktivt i arbetslivet för de tjänster som vi har kollat upp, vilket är den främsta anledningen till vårt val.
 
-## Kmom02
+## Refaktorering
 
 ### Instruktioner för att installera MongoDB på Ubuntu 22.04 LTS
 ```
@@ -51,20 +51,16 @@ sudo chmod 750 /var/lib/mongodb
 
 
 ### Tester
-La till enkel testning.
-
-mocha och chai är tillagda i package.json som dev dependencies. För att köra testerna, kör:
+Mocha och Chai är tillagda i package.json som dev dependencies. För att köra testerna, kör:
 ```
-cd ssr-editor-0.1
+cd backend
 nmp install // För att installera dev dependencies
 npm test
 ```
 
-Att göra:
-- lägg till chai-http för att testa API:et
-- elaborera lite kring testerna
-
 ### Instruktioner för att installera frontend, React med Typescript:
+```
 npx create-react-app frontend --template typescript
 cd frontend/
 npm run build
+```
