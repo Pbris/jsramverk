@@ -48,7 +48,7 @@ function List() {
     return () => {
       effectRan.current = true;
     };
-  }, []);
+  }, [navigate]);
 
 
 
