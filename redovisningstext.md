@@ -63,4 +63,7 @@ Det finns en rad möjliga förbättringar i appen. Vårt fokus har varit att imp
 - **Konsekvent användning av GraphQL-endpoint för alla CRUD-operationer till databasen**: Ibland används GraphQL-endpointen, ibland används direkt anrop till databasen. Detta kan göras konsekvent istället, vilket skulle minimera risken för att autentiseringen kan kringgås.
 - **Bättre felhantering**: Vi har inte lagt så mycket fokus på felhantering.
 - **Bättre testning**: Vi valde tidigt att använda Mocha, Chai och Chai-HTTP för att testa backend, eftersom det beskrevs som populärt och i viss utsträckning också ingick i kursmaterialet. Den buggen som beskrivs ovan tog mycket tid att försöka lösa, i efterhand hade det varit bättre att lägga den tiden på att göra bättre tester, och kanske använda ett annat testramverk. Det hade också varit bra att testa frontend.
-- **URL-parametrar**: I våra lokala miljöer så fungerar det att gå till en specifik URL (t.ex. den som skickas ut i mejlet, editor/documents/document_id) för att få tillgång till ett dokument eller en specfik vy. På studentservern fungerar det inte.
+
+## Fixade förbättringar:
+
+- **URL-parametrar**: I våra lokala miljö så fungerar det att gå till en specifik URL (t.ex. den som skickas ut i mejlet, editor/documents/document_id) för att få tillgång till ett dokument eller en specfik vy. På studentservern fungerade det inte, men nu har vi skapat en .htaccess som redirecar alla requests till index.html.
