@@ -72,7 +72,9 @@
   "eject": "react-scripts eject",
   
     
-  "deploy-k": "npm run build && rsync -av --delete build/ KAAA19@ssh.student.bth.se:www/editor && rsync -av .env KAAA19@ssh.student.bth.se:www/editor"
+  "deploy-k": "npm run build && rsync -av --delete build/ KAAA19@ssh.student.bth.se:www/editor && rsync -av .env KAAA19@ssh.student.bth.se:www/editor && rsync -av k.htaccess KAAA19@ssh.student.bth.se:www/editor/.htaccess",
+  "deploy-p": "npm run build && rsync -av --delete build/ ~pela23@ssh.student.bth.se:www/editor && rsync -av .env ~pela23@ssh.student.bth.se:www/editor && rsync -av p.htaccess ~pela23@ssh.student.bth.se:www/editor/.htaccess",
+  "deploy-o": "npm run build && rsync -av --delete build/ ~owsu23@ssh.student.bth.se:www/editor && rsync -av .env ~owsu23@ssh.student.bth.se:www/editor && rsync -av o.htaccess ~owsu23@ssh.student.bth.se:www/editor/.htaccess"
   
   },
   
