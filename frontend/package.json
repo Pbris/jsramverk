@@ -72,7 +72,7 @@
   "eject": "react-scripts eject",
   
     
-  "deploy-k": "npm run build && rsync -av --delete build/ KAAA19@ssh.student.bth.se:www/editor"
+  "deploy-k": "npm run build && rsync -av --delete build/ KAAA19@ssh.student.bth.se:www/editor && rsync -av .env KAAA19@ssh.student.bth.se:www/editor"
   
   },
   

@@ -9,6 +9,7 @@ interface User {
 
 function UserList() {
     const [users, setUsers] = useState<User[]>([]);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const fetchData = async () => {
         try {
             const response = await fetch(`${BACKEND_URL}/graphql`, {
@@ -22,17 +23,8 @@ function UserList() {
             const result = await response.json();
             if (result.data && result.data.users && result.data.users.length > 0) {
                 setUsers(result.data.users);
-                console.log(result.data.users);
-                console.log(result);
-                console.log("there is data...")
             } else {
-                setUsers([
-                    {
-                        _id: "0",
-                        email: "No users found",
-                        hashedPassword: "No users found"
-                    }
-                ]);
+                setErrorMessage("No users found");
             }
             console.log(users);
         } catch (error) {
@@ -41,10 +33,11 @@ function UserList() {
     }
     useEffect(() => {
         fetchData();
-    }, []);
+    });
     return (
         <div>
             <h1>Users</h1>
+            {errorMessage && <p>{errorMessage}</p>}
             <ul>
             {users.map(user => (
                     <li key={user._id}>

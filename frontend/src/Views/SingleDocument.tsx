@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { io, Socket } from "socket.io-client";
 import { BACKEND_URL } from '../connSettings';
-import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
 import InviteEmailComponent from '../Components/InviteEmailComponent';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DocumentEditor } from '../Components/DocumentEditor';
-import { CommentManager } from '../Components/CommentManager';
 
 interface Document {
   _id: string;
@@ -108,7 +105,7 @@ function SingleDocument() {
       }
     };
     deleteDocument();
-  }, [submit, doc]);
+  }, [submit, doc, docID, navigate]);
 
   /** Set cursor position in content area **/
   useEffect(() => {

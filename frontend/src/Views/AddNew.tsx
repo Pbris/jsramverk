@@ -28,7 +28,7 @@ function AddNew() {
             }
         }
         submitForm();
-    }, [submit])
+    }, [submit, content, navigate, title])
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
